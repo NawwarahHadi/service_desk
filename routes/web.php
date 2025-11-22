@@ -14,7 +14,7 @@ use App\Models\Role;
 
 // Dashboard route: shows a list of up to 50 users (admin user list)
 Route::get('/userlist', [AdminUserController::class, 'index'])->middleware(['auth', 'verified'])->name('userlist');
-
+Route::post('/admin/users', [AdminUserController::class, 'store'])->name('admin.users.store');
 // Add export route
 Route::get('/admin/users/export', [AdminUserController::class, 'export'])->middleware(['auth', 'verified'])->name('admin.users.export');
 

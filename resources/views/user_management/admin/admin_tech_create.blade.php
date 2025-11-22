@@ -116,30 +116,22 @@
 
                             // Define display text based on the value (for the visible field)
                             $roleDisplay = match (strtoupper($selectedRole)) {
-                                'STUDENT' => 'Student',
                                 'TECHNICIAN' => 'Technician',
-                                default => 'Role Not Set',
+                                default => 'Technician',
                             };
                         ?>
-                        <!-- Role -->
-                        <div class="col-md-6 mb-5">
-                            <label for="role" class="form-label">Role</label>
+                        <!-- Role (Hidden, defaults to TECHNICIAN) -->
+                        <input type="hidden" name="role" value="technician">
 
+                        <!-- Role Display (Read-only) -->
+                        <div class="col-md-6 mb-5">
+                            <label for="role_display" class="form-label">Role</label>
                             <input type="text"
-                                class="form-control"
-                                value="{{ $roleDisplay }}"
+                                class="form-control bg-light"
+                                value="Technician"
                                 readonly
                                 disabled>
-
-                            <input type="hidden"
-                                name="role"
-                                value="{{ strtoupper($selectedRole) }}">
-
-                            @error('role')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
-
                         <!-- Phone Number -->
                         <div class="col-md-6 mb-5">
                             <label for="phone_num" class="form-label">Phone Number</label>
@@ -153,61 +145,18 @@
                             @enderror
                         </div>
 
-                        <!-- Status -->
-                        <div class="col-md-6 mb-5">
-                            <label for="status" class="form-label">Status</label>
+                        <!-- Status (Hidden, defaults to ACTIVE) -->
+                        <input type="hidden" name="status" value="ACTIVE">
 
+                        <!-- Status Display (Read-only) -->
+                        <div class="col-md-6 mb-5">
+                            <label for="status_display" class="form-label">Status</label>
                             <input type="text"
-                                class="form-control"
+                                class="form-control bg-light"
                                 value="Active"
                                 readonly
                                 disabled>
-
-                            <input type="hidden"
-                                name="is_active"
-                                value="1">
-
-                            @error('is_active')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- With active or inavtive option
-                        <div class="col-md-6 mb-5">
-                            <label for="status" class="form-label required">Status</label>
-                            <select class="form-select @error('is_active') is-invalid @enderror"
-                                    id="is_active"
-                                    name="is_active"
-                                    required>
-                                <option value="">Select Status</option>
-                                <option value="1" {{ old('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        -->
-
-                        <!-- Hostel (only for STUDENT role) -->
-                        <div class="col-md-6 mb-5" id="hostel_field" style="display: none;">
-                            <label for="hostel_id" class="form-label">Hostel</label>
-                            <select class="form-select @error('hostel_id') is-invalid @enderror"
-                                    id="hostel_id"
-                                    name="hostel_id">
-                                <option value="">Select Hostel (Optional)</option>
-                                @if(isset($hostels) && $hostels->count() > 0)
-                                    @foreach($hostels as $hostel)
-                                        <option value="{{ $hostel->hostel_id }}" {{ old('hostel_id') == $hostel->hostel_id ? 'selected' : '' }}>
-                                            {{ $hostel->name ?? 'Hostel #' . $hostel->hostel_id }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
-                            @error('hostel_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <div class="form-text">Optional - Only applicable for students</div>
+                            <div class="form-text text-muted">New users are automatically set to Active status</div>
                         </div>
                     </div>
 

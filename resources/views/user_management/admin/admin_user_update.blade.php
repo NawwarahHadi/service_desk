@@ -45,10 +45,10 @@
                     </div>
 
                     <div class="col-md-6 mb-5">
-                        <label for="name" class="form-label required">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name"
-                               value="{{ old('name', $user->name) }}" required>
-                        @error('name')
+                        <label for="student_id" class="form-label required">Student ID</label>
+                        <input type="text" class="form-control" id="student_id" name="student_id" placeholder="e.g. 123456"
+                               value="{{ old('student_id', $user->student_id) }}" required>
+                        @error('student_id')
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
@@ -56,26 +56,19 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-5">
+                        <label for="name" class="form-label required">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name"
+                               value="{{ old('name', $user->name) }}" required>
+                        @error('name')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="col-md-6 mb-5">
                         <label for="email" class="form-label required">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="example@test.com"
                                value="{{ old('email', $user->email) }}" required>
                         @error('email')
-                            <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 mb-5">
-                        <label for="role_id" class="form-label required">Role</label>
-                        <select class="form-select" id="role_id" disabled>
-                            <option value="">Select a Role</option>
-                            @foreach($roles as $role)
-                                <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>
-                                    {{ $role->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" name="role_id" value="{{ $user->role_id }}" />
-                        @error('role_id')
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
@@ -89,6 +82,28 @@
                             <option value="0" {{ old('is_active', $user->is_active) == 0 ? 'selected' : '' }}>Inactive</option>
                         </select>
                         @error('is_active')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="col-md-6 mb-5">
+                        <label for="phone_num" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone_num" name="phone_num" placeholder="e.g. 0123456789"
+                               value="{{ old('phone_num', $user->phone_num) }}" required>
+                        @error('phone_num')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                </div>
+                <div class="row">
+                <div class="col-md-12 mb-5">
+                        <label for="role_id" class="form-label required">Role</label>
+                                            
+                        <input type="text" class="form-control" value="{{ optional($user->role)->name ?? 'Student' }}" readonly>
+                        <input type="hidden" name="role_id" value="{{ $user->role_id }}">
+
+                        @error('role_id')
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
@@ -114,12 +129,16 @@
                     </div>
                 </div>
 
-                <div class="text-end">
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{{ route('userlist') }}" class="btn btn-light">Cancel</a>
                     <button type="submit" class="btn btn-info">
-                        <i class="ki-duotone ki-check fs-2"></i>
+                        <i class="ki-duotone ki-check fs-2">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
                         Update User
                     </button>
-                </div>
+                    </div></div>
             </form>
         </div>
     </div>

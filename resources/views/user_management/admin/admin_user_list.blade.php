@@ -133,12 +133,14 @@
 
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item"
-                                       href="{{ route('admin.stud.create') }}?role=student">Student</a>
+                                    <a href="{{ route('admin.tech.create', ['role' => 'technician']) }}" class="dropdown-item">
+                                        Technician
+                                    </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item"
-                                       href="{{ route('admin.tech.create') }}?role=technician">Technician</a>
+                                    <a href="{{ route('admin.stud.create', ['role' => 'student']) }}" class="dropdown-item">
+                                        Student
+                                    </a>
                                 </li>
                             </ul>
                         </div>

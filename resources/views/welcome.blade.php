@@ -258,7 +258,7 @@
         </div>
 
         <h1 class="title">Welcome to Service Desk</h1>
-        <p class="subtitle">Your IT Support Solution</p>
+        <p class="subtitle">University Sains Malaysia</p>
 
         <div class="loader-container">
             <div class="loader"></div>

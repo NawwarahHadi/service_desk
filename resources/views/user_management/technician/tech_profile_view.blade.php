@@ -79,32 +79,32 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-6">
-                        <label for="password" class="form-label">New Password</label>
-                        <input type="password"
-                               id="password"
-                               name="password"
-                               class="form-control @error('password') is-invalid @enderror"
-                               autocomplete="new-password">
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                        <small class="text-muted">Leave blank to keep your current password.</small>
-                    </div>
+                    <h3 class="mb-5">Update Password (Optional)</h3>
 
-                    <div class="col-md-6">
-                        <label for="password_confirmation" class="form-label">Confirm New Password</label>
-                        <input type="password"
-                               id="password_confirmation"
-                               name="password_confirmation"
-                               class="form-control"
-                               autocomplete="new-password">
+                    <p class="text-muted">Leave the password fields blank to keep the user's current password.</p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-5">
+                            <label for="password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            @error('password')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-5">
+                            <label for="password_confirmation" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                        </div>
                     </div>
 
                     <div class="col-12 d-flex justify-content-end gap-2">
                         <a href="{{ route('dashboard') }}" class="btn btn-light">Cancel</a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="ki-duotone ki-check fs-2"></i>
+                        <button type="submit" class="btn btn-info">
+                            <i class="ki-duotone ki-check fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
                             Update Profile
                         </button>
                     </div>
