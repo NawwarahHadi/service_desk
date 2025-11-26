@@ -8,6 +8,51 @@
     <link href="{{ asset('metronic/assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
+@section('js_after')
+<script>
+    // Define the redirection URL
+    const userListUrl = "{{ route('userlist') }}";
+    // Note: The route helper 'route()' is a Laravel feature,
+    // but we use it here because it's present in your HTML context.
+
+    $(document).ready(function() {
+        // 1. Target the form by its ID
+        $('#create_user_form').on('submit', function(e) {
+
+            // Prevent the default browser form submission (which would navigate away immediately)
+            e.preventDefault();
+
+            // *** IMPORTANT: In a real application, you would put the AJAX call
+            // to the server here. The dialog/redirect would happen inside the
+            // success callback of the AJAX request. ***
+
+            // 2. Show the Success Dialog Box
+            Swal.fire({
+                title: 'Success!',
+                text: 'User account created successfully.',
+                icon: 'success', // Use 'success' for positive feedback
+                confirmButtonText: 'Go to User List',
+                // Remove cancel button as the action is finished
+                showCancelButton: false,
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                }
+            }).then((result) => {
+                // 3. Redirect after the user clicks the "Go to User List" button (or closes the alert)
+                window.location.href = userListUrl;
+            });
+
+            // 4. If you wanted to automatically redirect without a click (e.g., after 2 seconds)
+            /*
+            setTimeout(function() {
+                 window.location.href = userListUrl;
+            }, 2000); // 2000 milliseconds = 2 seconds
+            */
+        });
+    });
+</script>
+@endsection
+
 @section('content')
     <div id="kt_content_container" class="container-xxl">
         <div class="card-header d-flex align-items-center justify-content-between">
@@ -63,7 +108,7 @@
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
                     <div class="col-md-6 mb-5">
                         <label for="email" class="form-label required">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="example@test.com"
@@ -85,7 +130,7 @@
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
                     <div class="col-md-6 mb-5">
                         <label for="phone_num" class="form-label">Phone Number</label>
                         <input type="text" class="form-control" id="phone_num" name="phone_num" placeholder="e.g. 0123456789"
@@ -94,12 +139,12 @@
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
                 </div>
                 <div class="row">
                 <div class="col-md-12 mb-5">
                         <label for="role_id" class="form-label required">Role</label>
-                                            
+
                         <input type="text" class="form-control" value="{{ optional($user->role)->name ?? 'Student' }}" readonly>
                         <input type="hidden" name="role_id" value="{{ $user->role_id }}">
 
