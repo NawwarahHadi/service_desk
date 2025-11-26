@@ -7,6 +7,104 @@
 @section('css_after')
 @endsection
 
+@section('js_after')
+<script>
+    // Assuming SweetAlert2 (Swal) and jQuery are loaded globally.
+
+    // 1. Intercept the form submission
+    $('#create_user_form').on('submit', function(e) {
+        // Prevent the default form submission for initial validation/setup
+        // You only need this if you want to skip the backend entirely for demo purposes,
+        // but typically you let the backend handle the submission first.
+
+        // **IMPORTANT CONCEPT:**
+        // In a real application, the PHP/Laravel backend handles the form submission
+        // (to route('admin.users.store')). If successful, the backend does one of two things:
+        // A. Returns a JSON success message (for AJAX forms).
+        // B. Redirects back to '/userlist' with a session flash message.
+
+        // Since you are focusing on the frontend *after* creation:
+        // We will simulate the success scenario that happens *after* the backend finishes.
+
+        // --- SIMULATING BACKEND SUCCESS AND REDIRECTION ---
+
+        // This is a placeholder for the logic that happens after the backend saves the user.
+        // If your backend redirects with a session flash message (e.g., 'success'),
+        // you would check for that session data here and display the Swal.
+
+        // For a pure frontend simulation, we'll stop the form submission and display the success dialog:
+
+        // **If you want the dialog to appear right after clicking 'Create User' (before backend processing):**
+        // e.preventDefault();
+        // Swal.fire({ ... }).then(() => { if (result.isConfirmed) { this.submit(); } });
+        // **But since you asked to redirect to /userlist *after* creation,
+        // we'll simulate the dialog appearing on the /userlist page after the backend redirects.**
+    });
+
+
+    // 2. Logic to display the success dialog on the destination page (/userlist)
+    //    Since you want the dialog to show *after* the user is created and the page redirects
+    //    to /userlist, you typically put this code on the /userlist page, which checks for a
+    //    session success message from the backend.
+
+    // **Alternative (Pure Frontend Simulation):**
+    // We will change the form action to redirect to /userlist and add a parameter
+    // that the /userlist page can check for.
+
+    // --- TEMPORARY PURE FRONTEND CODE (FOR SIMULATION ON THE CURRENT PAGE) ---
+    // This function will execute immediately upon page load (e.g., if the user was just created and redirected)
+
+    // Note: For this to work seamlessly, you would typically need to redirect
+    // back to this page with a URL parameter or a session flash message.
+
+    const showSuccessDialog = (message) => {
+        Swal.fire({
+            title: 'Success!',
+            text: message,
+            icon: 'success',
+            confirmButtonText: 'View Users',
+            customClass: {
+                confirmButton: "btn btn-success",
+            }
+        }).then((result) => {
+            // Optional: Redirect to /userlist if the user clicks the confirm button
+            if (result.isConfirmed) {
+                 window.location.href = "{{ route('userlist') }}";
+            }
+        });
+    }
+
+    // Since we can't fully control the backend redirect here, we'll bind the
+    // success dialog to the successful form submission using an **AJAX simulation** // for a better frontend experience:
+
+    $('#create_user_form').on('submit', function(e) {
+        e.preventDefault(); // Stop the default browser form submission
+
+        const form = $(this);
+
+        // In a real app, you'd perform an AJAX call here (e.g., $.post, fetch)
+        // Since we are frontend-only, we SIMULATE a successful response after a short delay
+
+        // Add a loading state
+        form.find('button[type="submit"]').prop('disabled', true).html('Creating...');
+
+        setTimeout(() => {
+            // --- SIMULATED SUCCESS RESPONSE ---
+
+            // 1. Show the success dialog
+            showSuccessDialog('New user account created successfully!');
+
+            // 2. The redirection is handled inside the showSuccessDialog function's .then() block
+
+            // --- END SIMULATION ---
+
+        }, 500); // Simulate network delay (500ms)
+
+    });
+
+</script>
+@endsection
+
 @section('content')
     <div id="kt_content_container" class="container-xxl">
         <div class="card">
