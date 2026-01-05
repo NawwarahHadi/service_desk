@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -53,5 +53,16 @@ class User extends Authenticatable implements LaratrustUserContract
                 $user->userid = 'STUD' . str_pad($newNumber, 6, '0', STR_PAD_LEFT);
             }
         });
+    }
+    // app/Models/User.php
+
+    public function categories()
+    {
+        return $this->belongsToMany(
+            \App\Models\Category::class,
+            'technician_categories',
+            'user_id',      // ✅ matches your table
+            'category_id'
+        );
     }
 }

@@ -196,6 +196,32 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/ticket/{id}', [TicketController::class, 'show'])->name('ticket.details');
 
+// test technician
+Route::middleware(['auth'])->prefix('technician')->name('technician.')->group(function () {
 
+    Route::get('/tickets', [TechnicianTicketController::class, 'index'])
+        ->name('ticket.list');
+
+    Route::get('/tickets/{id}', [TechnicianTicketController::class, 'show'])
+        ->name('ticket.details');
+
+    Route::get('/tickets/{id}/update', [TechnicianTicketController::class, 'edit'])
+        ->name('ticket.update');
+
+    Route::post('/tickets/{id}/update', [TechnicianTicketController::class, 'update'])
+        ->name('ticket.update.submit');
+});
+
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/tickets', [AdminTicketController::class, 'index'])
+        ->name('ticket.list');
+
+    Route::get('/tickets/{id}', [AdminTicketController::class, 'show'])
+        ->name('ticket.details');
+
+    Route::post('/assign-technician', [AdminTicketController::class, 'assignTechnician'])
+        ->name('assign.technician');
+});
 
 require __DIR__.'/auth.php';
