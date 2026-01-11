@@ -11,95 +11,72 @@
         </div>
 
         <div class="card-body">
-            <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Ticket ID</h6>
-                <p class="fs-6 mb-0">{{ $ticket->id }}</p>
-            </div>
+            {{-- Ticket Information --}}
+            @php
+                $fields = [
+                    'Ticket ID' => $ticket->id,
+                    'Student ID' => $ticket->userid,
+                    'Title' => $ticket->title,
+                    'Category' => $ticket->category->name ?? '-', // <-- Fix: get category name
+                    'Description' => $ticket->description,
+                    'Location' => $ticket->location,
+                    'Date Service Not Function' => $ticket->date,
+                    'Resolved Date' => ($ticket->status == 'Completed' && $ticket->resolved_date) ? $ticket->resolved_date : '-',
+                ];
+            @endphp
 
-            <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Student ID</h6>
-                <p class="fs-6 mb-0">{{ $ticket->userid }}</p>
-            </div>
+            @foreach($fields as $label => $value)
+                <div class="mb-4">
+                    <h6 class="fw-semibold text-muted mb-1">{{ $label }}</h6>
+                    <p class="fs-6 mb-0">{{ $value }}</p>
+                </div>
+            @endforeach
 
-            <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Title</h6>
-                <p class="fs-6 mb-0">{{ $ticket->title }}</p>
-            </div>
-
-            <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Category</h6>
-                <p class="fs-6 mb-0">{{ $ticket->category }}</p>
-            </div>
-
-            <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Description</h6>
-                <p class="fs-6 mb-0">{{ $ticket->description }}</p>
-            </div>
-
-            <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Location</h6>
-                <p class="fs-6 mb-0">{{ $ticket->location }}</p>
-            </div>
-
-            <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Date Service Not Function</h6>
-                <p class="fs-6 mb-0">{{ $ticket->date }}</p>
-            </div>
-
-            <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Resolved Date</h6>
-                <p class="fs-6 mb-0">
-                    @if($ticket->status == 'Completed' && isset($ticket->resolved_date))
-                        {{ $ticket->resolved_date }}
-                    @else
-                        -
-                    @endif
-                </p>
-            </div>
-
+            {{-- Status --}}
             <div class="mb-4">
                 <h6 class="fw-semibold text-muted mb-1">Status</h6>
                 @if ($ticket->status == 'Completed')
                     <span class="badge bg-success text-white fs-6">Completed</span>
                 @elseif ($ticket->status == 'Pending')
                     <span class="badge bg-warning text-white fs-6">Pending</span>
-                 @elseif ($ticket->status == 'Cancel')
+                @elseif ($ticket->status == 'Cancel')
                     <span class="badge bg-danger text-white fs-6">Cancel</span>
                 @else
                     <span class="badge bg-secondary text-white fs-6">Unknown</span>
                 @endif
             </div>
 
-            <div class="mb-4">
-                    @if (!empty($ticket->comment))
-                        <h6 class="fw-semibold text-muted mb-1">Comment</h6>
-                        @if ($ticket->status == 'Completed')
-                            <p class="fs-6 mb-0 bg-success-subtle p-3 rounded w-100" style="min-height: 60px;">
-                                {{ $ticket->comment }}
-                            </p>
-                        @elseif ($ticket->status == 'Cancel')
-                            <p class="fs-6 mb-0 bg-danger-subtle p-3 rounded w-100" style="min-height: 60px;">
-                                {{ $ticket->comment }}
-                            </p>
-                        @endif
+            {{-- Comment --}}
+            @if (!empty($ticket->comment))
+                <div class="mb-4">
+                    <h6 class="fw-semibold text-muted mb-1">Comment</h6>
+                    @if ($ticket->status == 'Completed')
+                        <p class="fs-6 mb-0 bg-success-subtle p-3 rounded w-100" style="min-height: 60px;">{{ $ticket->comment }}</p>
+                    @elseif ($ticket->status == 'Cancel')
+                        <p class="fs-6 mb-0 bg-danger-subtle p-3 rounded w-100" style="min-height: 60px;">{{ $ticket->comment }}</p>
                     @endif
                 </div>
+            @endif
         </div>
 
         <div class="card-footer text-end">
             <a href="{{ route('admin.ticket.list') }}" class="btn btn-sm btn-info fs-6">Back</a>
-            {{-- <button
-                class="btn btn-sm btn-info fs-6 {{ $ticket->status != 'Pending' ? 'disabled' : '' }}"
-                data-bs-toggle="modal"
-                data-bs-target="#
-                Modal">
-                Assign
-            </button> --}}
+
+            {{-- Assign Technician button only for pending tickets --}}
+            @if($ticket->status == 'Pending')
+                <button
+                    class="btn btn-sm btn-primary fs-6"
+                    data-bs-toggle="modal"
+                    data-bs-target="#assignModal">
+                    Assign Technician
+                </button>
+            @endif
         </div>
     </div>
 </div>
 
-{{-- <!-- Assign Technician Modal -->
+{{-- Assign Technician Modal --}}
+@if($ticket->status == 'Pending')
 <div class="modal fade" id="assignModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <form method="POST" action="{{ route('admin.assign.technician') }}">
@@ -119,11 +96,12 @@
                     </select>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-info fs-6">Assign</button>
+                    <button type="submit" class="btn btn-sm btn-primary fs-6">Assign</button>
                     <button type="button" class="btn btn-sm btn-secondary fs-6" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </form>
     </div>
-</div> --}}
+</div>
+@endif
 @endsection
