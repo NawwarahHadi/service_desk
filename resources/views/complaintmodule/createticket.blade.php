@@ -9,7 +9,7 @@
 @endsection
 
 @section('js_after')
-    {{-- <script src="{{ asset ('metronic/js/create.js')}}"></script> --}}
+    <script src="{{ asset ('metronic/js/create.js')}}"></script>
     <script src="{{ asset('metronic/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('metronic/js/scripts.bundle.js') }}"></script>
 @endsection

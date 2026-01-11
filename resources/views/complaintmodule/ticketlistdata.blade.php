@@ -87,7 +87,7 @@
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                @if ($ticket->status == 'Completed')
+                                @if ($ticket->status == 'completed')
                                     @if (!empty($ticket->rating) && $ticket->rating > 0)
                                         {{-- ⭐ Show stars when rating exists --}}
                                         <div class="rating d-flex justify-content-left" style="gap:4px;">
