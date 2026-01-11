@@ -128,15 +128,25 @@ Route::get('/dashboard', [DashboardController::class, 'technian']) //for  techni
 Route::middleware('auth')->group(function () {
 
     //Complaint Ticket Module
+    Route::middleware('auth')->group(function () {
+
     Route::prefix('complaint')->name('complaint.')->group(function () {
-        Route::get('/createticket', function () {
-            return view('complaintmodule.createticket');
-        });
-        Route::get('/ticketlistdata', [TicketController::class, 'index'])->name('ticket.list');
-        Route::get('/ticket/{id}', [TicketController::class, 'show'])->name('ticket.details');
 
+        Route::get('/createticket', [TicketController::class, 'create'])
+            ->name('ticket.create');
 
+        Route::post('/createticket', [TicketController::class, 'store'])
+            ->name('ticket.store');
+
+        Route::get('/ticketlistdata', [TicketController::class, 'index'])
+            ->name('ticket.list');
+
+        Route::get('/ticket/{ticket_number}', [TicketController::class, 'show'])
+            ->name('ticket.details');
     });
+});
+
+
 
     //Feedback
     Route::prefix('feedback')->name('feedback.')->group(function () {
@@ -223,5 +233,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/assign-technician', [AdminTicketController::class, 'assignTechnician'])
         ->name('assign.technician');
 });
+
 
 require __DIR__.'/auth.php';
