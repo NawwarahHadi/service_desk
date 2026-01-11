@@ -8,53 +8,59 @@
 @endsection
 
 @section('js_after')
-<script src="{{ asset('metronic/assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
-<script src="{{ asset('metronic/js/datatable.js')}}"></script>
+<script src="{{ asset('metronic/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="{{ asset('metronic/js/datatable.js') }}"></script>
 
 <script>
-// Store all technicians data with their categories
+// Pass technicians data from PHP to JS
 const allTechnicians = {!! json_encode($technicians) !!};
 
-function openAssignModal(ticketId, status, category) {
-    if(status !== 'Pending') return; // Only allow if pending
+document.addEventListener('DOMContentLoaded', function () {
+    // Use delegated event listener for DataTables compatibility
+    document.querySelector('table').addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('btn-assign')) {
+            const ticketId = e.target.dataset.ticket;
+            const status = e.target.dataset.status;
+            const categoryId = Number(e.target.dataset.categoryId); // ✅ ensure numeric
 
-    console.log('Ticket Category:', category);
-    console.log('All Technicians:', allTechnicians);
+            if (status.toLowerCase() !== 'pending') return;
 
-    document.getElementById('assignTicketId').value = ticketId;
+            // Set ticket ID in modal
+            document.getElementById('assignTicketId').value = ticketId;
 
-    // Filter technicians by category
-    const technicianSelect = document.getElementById('technician');
-    technicianSelect.innerHTML = ''; // Clear existing options
+            const technicianSelect = document.getElementById('technician');
+            technicianSelect.innerHTML = '';
 
-    const matchingTechnicians = allTechnicians.filter(tech => {
-        console.log('Checking tech:', tech.name, 'Category:', tech.category);
-        return tech.categories.includes(category);
+            // Debugging logs (optional)
+            console.log('CATEGORY ID FROM BUTTON:', categoryId);
+            console.log('ALL TECHNICIANS:', allTechnicians);
+
+            // Filter technicians by category ID
+            const matchingTechnicians = allTechnicians.filter(tech =>
+                tech.categories.some(cat => Number(cat.id) === categoryId)
+            );
+
+            const submitBtn = document.querySelector('#assignModal button[type="submit"]');
+
+            if (matchingTechnicians.length === 0) {
+                technicianSelect.innerHTML = '<option value="">No technician available for this category</option>';
+                submitBtn.disabled = true;
+            } else {
+                matchingTechnicians.forEach(tech => {
+                    const option = document.createElement('option');
+                    option.value = tech.id;
+                    option.textContent = tech.name;
+                    technicianSelect.appendChild(option);
+                });
+                submitBtn.disabled = false;
+            }
+
+            // Show modal
+            new bootstrap.Modal(document.getElementById('assignModal')).show();
+        }
     });
-
-    console.log('Matching Technicians:', matchingTechnicians);
-
-    if(matchingTechnicians.length === 0) {
-        technicianSelect.innerHTML =
-            '<option value="">No technician available for this category</option>';
-        const submitBtn = document.querySelector('#assignModal button[type="submit"]');
-        if(submitBtn) submitBtn.disabled = true;
-    } else {
-        matchingTechnicians.forEach(tech => {
-            const option = document.createElement('option');
-            option.value = tech.id;
-            option.textContent = tech.name; // 🔥 FIXED: No more category shown
-            technicianSelect.appendChild(option);
-        });
-        const submitBtn = document.querySelector('#assignModal button[type="submit"]');
-        if(submitBtn) submitBtn.disabled = false;
-    }
-
-    var modal = new bootstrap.Modal(document.getElementById('assignModal'));
-    modal.show();
-}
+});
 </script>
-
 @endsection
 
 @section('content')
@@ -63,26 +69,8 @@ function openAssignModal(ticketId, status, category) {
         <div class="card-header">
             <h3 class="card-title">Ticket List (Admin)</h3>
         </div>
+
         <div class="card-body">
-            <style>
-                /* Active page number button (currently blue) → make it purple */
-                .page-item.active .page-link {
-                    background-color: #7239EA !important; /* Purple */
-                    border-color: #7239EA !important;
-                    color: #fff !important;
-                }
-
-                /* Normal page number buttons */
-                .page-link {
-                    color: #7239EA !important;
-                }
-
-                .page-link:hover {
-                    background-color: #ebe0ff !important; /* light purple hover */
-                    color: #7239EA !important;
-                }
-            </style>
-
             <table class="m-datatable table align-middle table-row-dashed fs-6 gy-5">
                 <thead>
                     <tr class="text-start text-dark fw-bold fs-7 text-uppercase gs-0">
@@ -93,55 +81,45 @@ function openAssignModal(ticketId, status, category) {
                         <th>Technician</th>
                         <th>Date</th>
                         <th>Resolved Date</th>
-                        <th class="text-start">Status</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody class="text-black-600 fw-semibold">
+
+                <tbody class="fw-semibold">
                     @foreach ($tickets as $ticket)
                         <tr>
                             <td>{{ $ticket->id }}</td>
-                            <td>{{ $ticket->userid ?? $ticket->student_id }}</td>
+                            <td>{{ $ticket->user->userid ?? '-' }}</td>
                             <td>
                                 <a href="{{ route('admin.ticket.details', $ticket->id) }}" class="fw-bold text-decoration-none text-dark">
                                     {{ $ticket->title }}
                                 </a>
-                                <div class="text-muted" style="font-size: 12px;">Location: {{ $ticket->location }}</div>
+                                <div class="text-muted fs-7">
+                                    Location: {{ $ticket->location }}
+                                </div>
                             </td>
-                            <td>{{ $ticket->category }}</td>
-
-                            <!-- Technician Column -->
+                            <td>{{ $ticket->category->name ?? '-' }}</td>
+                            <td>{{ $ticket->technician->name ?? 'Not Assigned' }}</td>
+                            <td>{{ optional($ticket->raised_date)->format('d/m/Y') ?? '-' }}</td>
+                            <td>{{ optional($ticket->resolved_date)->format('d/m/Y') ?? '-' }}</td>
                             <td>
-                                @if(isset($ticket->technician_name))
-                                    {{ $ticket->technician_name }}
+                                @if ($ticket->status === 'completed')
+                                    <span class="badge badge-light-success">Completed</span>
+                                @elseif ($ticket->status === 'pending')
+                                    <span class="badge badge-light-warning">Pending</span>
+                                @elseif ($ticket->status === 'cancel')
+                                    <span class="badge badge-light-danger">Cancel</span>
                                 @else
-                                    <span class="text-muted">Not Assigned</span>
+                                    <span class="badge badge-light-secondary">Unknown</span>
                                 @endif
                             </td>
-
-                            <td>{{ $ticket->date }}</td>
                             <td>
-                                @if($ticket->status == 'Completed' && isset($ticket->resolved_date))
-                                    {{ $ticket->resolved_date }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="text-start">
-                                @if ($ticket->status == 'Completed')
-                                    <span class="badge badge-light-success fs-6">Completed</span>
-                                @elseif ($ticket->status == 'Pending')
-                                    <span class="badge badge-light-warning fs-6">Pending</span>
-                                @elseif ($ticket->status == 'Cancel')
-                                    <span class="badge badge-light-danger fs-6">Cancel</span>
-                                @else
-                                    <span class="badge badge-light-secondary fs-6">Unknown</span>
-                                @endif
-                            </td>
-                            <td class="text-start">
                                 <button
-                                    class="btn btn-sm btn-info fs-6 {{ $ticket->status != 'Pending' ? 'disabled' : '' }}"
-                                    onclick="openAssignModal('{{ $ticket->id }}','{{ $ticket->status }}','{{ $ticket->category }}');">
+                                    class="btn btn-sm btn-info btn-assign {{ strtolower($ticket->status) !== 'pending' ? 'disabled' : '' }}"
+                                    data-ticket="{{ $ticket->id }}"
+                                    data-status="{{ $ticket->status }}"
+                                    data-category-id="{{ $ticket->category_id }}">
                                     Assign
                                 </button>
                             </td>
@@ -154,25 +132,26 @@ function openAssignModal(ticketId, status, category) {
 </div>
 
 <!-- Assign Technician Modal -->
-<div class="modal fade" id="assignModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="assignModal" tabindex="-1">
     <div class="modal-dialog">
         <form method="POST" action="{{ route('admin.assign.technician') }}">
             @csrf
             <input type="hidden" id="assignTicketId" name="ticket_id">
+
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Assign Technician</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
-                    <label for="technician">Choose Technician</label>
-                    <select name="technician_id" id="technician" class="form-select" required>
-                        <!-- Options will be populated dynamically by JavaScript -->
-                    </select>
+                    <label class="form-label">Choose Technician</label>
+                    <select name="technician_id" id="technician" class="form-select" required></select>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-info fs-6">Assign</button>
-                    <button type="button" class="btn btn-secondary fs-6" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-info btn-sm">Assign</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </form>

@@ -1,5 +1,5 @@
 <x-guest-layout>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @push('scripts')
     <script>
@@ -263,6 +263,23 @@
                 width: 100px;
             }
         }
+
+        .password-toggle{
+          position:absolute;
+          right:0.75rem;
+          top:50%;
+          transform:translateY(-50%);
+          background:transparent;
+          border:none;
+          padding:0.2rem;
+          display:flex;
+          align-items:center;
+          cursor:pointer;
+          color:#667eea; /* matches your theme */
+        }
+        .password-toggle:focus{ outline:none; }
+        .password-toggle i{ display:inline-block; font-size:20px; width:20px; height:20px; line-height:1; }
+
     </style>
 
     <!-- Background decorations -->
@@ -272,7 +289,7 @@
 
         <!-- Logo -->
         <div class="auth-logo">
-            <img src="{{ asset('metronic/assets/media/logoservicedesk.png') }}" 
+            <img src="{{ asset('metronic/assets/media/logoservicedesk.png') }}"
                  alt="USM">
             <img src="{{ asset('metronic/assets/media/servicedeskpurple.png') }}" alt="Service Desk Logo">
         </div>
@@ -299,11 +316,18 @@
                 @enderror
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 position-relative">
                 <label for="password" class="form-label">Password</label>
-                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
-                       name="password" required autocomplete="current-password"
-                       placeholder="Enter your password">
+                <div style="position:relative">
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+                           name="password" required autocomplete="current-password"
+                           placeholder="Enter your password">
+                    <button type="button" id="togglePassword" class="password-toggle" aria-pressed="false" title="Show password">
+                        <i id="eyeOpen" class="bi bi-eye" aria-hidden="true"></i>
+                        <i id="eyeClosed" class="bi bi-eye-slash" aria-hidden="true" style="display:none"></i>
+                    </button>
+                </div>
+
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -333,5 +357,46 @@
             Don't have an account?
             <a href="{{ route('register') }}" class="auth-link">Register now</a>
         </div>
+
+        @push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const pwd = document.getElementById('password');
+  const btn = document.getElementById('togglePassword');
+  const eyeOpen = document.getElementById('eyeOpen');
+  const eyeClosed = document.getElementById('eyeClosed');
+  let hideTimeout = null;
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      eyeOpen.style.display = 'none';
+      eyeClosed.style.display = 'inline';
+      btn.setAttribute('aria-pressed', 'true');
+      btn.title = 'Hide password';
+
+      if (hideTimeout) clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(() => {
+        pwd.type = 'password';
+        eyeOpen.style.display = 'inline';
+        eyeClosed.style.display = 'none';
+        btn.setAttribute('aria-pressed', 'false');
+        btn.title = 'Show password';
+        hideTimeout = null;
+      }, 3000); // 3000ms = 3 seconds
+    } else {
+      // hide immediately if already visible
+      pwd.type = 'password';
+      eyeOpen.style.display = 'inline';
+      eyeClosed.style.display = 'none';
+      btn.setAttribute('aria-pressed', 'false');
+      btn.title = 'Show password';
+      if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
+    }
+  });
+});
+</script>
+@endpush
 
 </x-guest-layout>

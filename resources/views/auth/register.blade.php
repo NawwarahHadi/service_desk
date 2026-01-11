@@ -288,6 +288,22 @@
                 width: 80px;
             }
         }
+
+        .password-toggle{
+          position:absolute;
+          right:0.75rem;
+          top:50%;
+          transform:translateY(-50%);
+          background:transparent;
+          border:none;
+          padding:0.2rem;
+          display:flex;
+          align-items:center;
+          cursor:pointer;
+          color:#667eea; /* matches theme */
+        }
+        .password-toggle:focus{ outline:none; }
+        .password-toggle i{ display:inline-block; font-size:20px; width:20px; height:20px; line-height:1; }
     </style>
 
     <!-- Background decorations -->
@@ -356,22 +372,34 @@
                 @enderror
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 position-relative">
                 <label for="password" class="form-label required">Password</label>
-                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
-                       name="password" required autocomplete="new-password"
-                       placeholder="Create a strong password">
+                <div style="position:relative">
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+                           name="password" required autocomplete="new-password"
+                           placeholder="Create a strong password">
+                    <button type="button" id="togglePassword" class="password-toggle" aria-pressed="false" title="Show password">
+                        <i id="eyeOpen" class="bi bi-eye" aria-hidden="true"></i>
+                        <i id="eyeClosed" class="bi bi-eye-slash" aria-hidden="true" style="display:none"></i>
+                    </button>
+                </div>
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
                 <small class="text-muted">Minimum 8 characters</small>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 position-relative">
                 <label for="password_confirmation" class="form-label required">Confirm Password</label>
-                <input id="password_confirmation" type="password" class="form-control"
-                       name="password_confirmation" required autocomplete="new-password"
-                       placeholder="Re-enter your password">
+                <div style="position:relative">
+                    <input id="password_confirmation" type="password" class="form-control"
+                           name="password_confirmation" required autocomplete="new-password"
+                           placeholder="Re-enter your password">
+                    <button type="button" id="togglePasswordConfirm" class="password-toggle" aria-pressed="false" title="Show password">
+                        <i id="eyeOpenConfirm" class="bi bi-eye" aria-hidden="true"></i>
+                        <i id="eyeClosedConfirm" class="bi bi-eye-slash" aria-hidden="true" style="display:none"></i>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary w-100 py-3">
@@ -384,5 +412,60 @@
             Already have an account?
             <a href="{{ route('login') }}" class="auth-link">Log in</a>
         </div>
+
+        @push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function setupToggle(btnId, inputId, openId, closedId) {
+    const btn = document.getElementById(btnId);
+    const input = document.getElementById(inputId);
+    const eyeOpen = document.getElementById(openId);
+    const eyeClosed = document.getElementById(closedId);
+    if (!btn || !input) return;
+    let hideTimeout = null;
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (eyeOpen) eyeOpen.style.display = 'none';
+        if (eyeClosed) eyeClosed.style.display = 'inline';
+        btn.setAttribute('aria-pressed', 'true');
+        btn.title = 'Hide password';
+
+        if (hideTimeout) clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => {
+          input.type = 'password';
+          if (eyeOpen) eyeOpen.style.display = 'inline';
+          if (eyeClosed) eyeClosed.style.display = 'none';
+          btn.setAttribute('aria-pressed', 'false');
+          btn.title = 'Show password';
+          hideTimeout = null;
+        }, 3000);
+      } else {
+        // hide immediately if already visible
+        input.type = 'password';
+        if (eyeOpen) eyeOpen.style.display = 'inline';
+        if (eyeClosed) eyeClosed.style.display = 'none';
+        btn.setAttribute('aria-pressed', 'false');
+        btn.title = 'Show password';
+        if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
+      }
+    });
+
+    // allow keyboard accessibility
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  }
+
+  setupToggle('togglePassword', 'password', 'eyeOpen', 'eyeClosed');
+  setupToggle('togglePasswordConfirm', 'password_confirmation', 'eyeOpenConfirm', 'eyeClosedConfirm');
+});
+</script>
+@endpush
 
 </x-guest-layout>

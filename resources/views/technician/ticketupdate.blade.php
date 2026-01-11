@@ -21,7 +21,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Category</label>
-                    <input type="text" class="form-control" value="{{ $ticket->category }}" disabled>
+                    <input type="text" class="form-control" value="{{ $ticket->category->name ?? '-' }}" disabled>
                 </div>
 
                 <div class="mb-3">
@@ -37,9 +37,9 @@
                 <div class="mb-3">
                     <label class="form-label">Status</label>
                     <select name="status" class="form-select">
-                        <option value="Pending" {{ $ticket->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="Completed" {{ $ticket->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                        <option value="Cancel" {{ $ticket->status == 'Cancel' ? 'selected' : '' }}>Cancel</option>
+                        <option value="pending" {{ strtolower($ticket->status) === 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="completed" {{ strtolower($ticket->status) === 'completed' ? 'selected' : '' }}>Completed</option>
+                        <option value="cancel" {{ strtolower($ticket->status) === 'cancel' ? 'selected' : '' }}>Cancel</option>
                     </select>
                 </div>
 

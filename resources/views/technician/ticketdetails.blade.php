@@ -18,7 +18,7 @@
 
             <div class="mb-4">
                 <h6 class="fw-semibold text-muted mb-1">Student ID</h6>
-                <p class="fs-6 mb-0">{{ $ticket->userid }}</p>
+                <p class="fs-6 mb-0">{{ $ticket->user->userid ?? '-' }}</p>
             </div>
 
             <div class="mb-4">
@@ -28,7 +28,7 @@
 
             <div class="mb-4">
                 <h6 class="fw-semibold text-muted mb-1">Category</h6>
-                <p class="fs-6 mb-0">{{ $ticket->category }}</p>
+                <p class="fs-6 mb-0">{{ $ticket->category->name ?? '-' }}</p>
             </div>
 
             <div class="mb-4">
@@ -43,14 +43,14 @@
 
             <div class="mb-4">
                 <h6 class="fw-semibold text-muted mb-1">Date Service Not Function</h6>
-                <p class="fs-6 mb-0">{{ $ticket->date }}</p>
+                <p class="fs-6 mb-0">{{ optional($ticket->raised_date)->format('d/m/Y H:i') ?? '-' }}</p>
             </div>
 
             <div class="mb-4">
                 <h6 class="fw-semibold text-muted mb-1">Resolved Date</h6>
                 <p class="fs-6 mb-0">
-                    @if($ticket->status == 'Completed' && isset($ticket->resolved_date))
-                        {{ $ticket->resolved_date }}
+                    @if ($ticket->status === 'completed' && $ticket->resolved_date)
+                        {{ $ticket->resolved_date->format('d/m/Y H:i') }}
                     @else
                         -
                     @endif
@@ -59,10 +59,12 @@
 
             <div class="mb-4">
                 <h6 class="fw-semibold text-muted mb-1">Status</h6>
-                @if ($ticket->status == 'Completed')
+                @if (strtolower($ticket->status) === 'completed')
                     <span class="badge bg-success text-white fs-6">Completed</span>
-                @elseif ($ticket->status == 'Pending')
+                @elseif (strtolower($ticket->status) === 'pending')
                     <span class="badge bg-warning text-white fs-6">Pending</span>
+                @elseif (strtolower($ticket->status) === 'cancel')
+                    <span class="badge bg-danger text-white fs-6">Cancel</span>
                 @else
                     <span class="badge bg-secondary text-white fs-6">Unknown</span>
                 @endif
@@ -71,9 +73,8 @@
 
         <div class="card-footer text-end">
             <a href="{{ route('technician.ticket.list') }}" class="btn btn-light me-3">Back</a>
-            <a href="{{ route('technician.ticket.update', $ticket->id) }}"
-               class="btn btn-sm btn-info fs-6">
-               Update
+            <a href="{{ route('technician.ticket.update', $ticket->id) }}" class="btn btn-sm btn-info fs-6">
+                Update
             </a>
         </div>
     </div>
