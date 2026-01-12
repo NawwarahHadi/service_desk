@@ -141,7 +141,7 @@
 
                         <!-- Role Display (Read-only) -->
                         <div class="col-md-6 mb-5">
-                            <label for="role_display" class="form-label required">Role</label>
+                            <label for="role_display" class="form-label">Role</label>
                             <input type="text"
                                 class="form-control"
                                 value="Student"
@@ -167,7 +167,7 @@
 
                         <!-- Status Display (Read-only) -->
                         <div class="col-md-6 mb-5">
-                            <label for="status_display" class="form-label required">Status</label>
+                            <label for="status_display" class="form-label">Status</label>
                             <input type="text"
                                 class="form-control"
                                 value="Active"

@@ -121,23 +121,18 @@
                                 default => 'Role Not Set',
                             };
                         ?>
+
+                        <!-- Role (Hidden, defaults to STUDENT) -->
+                        <input type="hidden" name="role_id" value="3">
+
                         <!-- Role -->
                         <div class="col-md-6 mb-5">
                             <label for="role" class="form-label">Role</label>
-
                             <input type="text"
                                 class="form-control"
-                                value="{{ $roleDisplay }}"
+                                value="Technician"
                                 readonly
                                 disabled>
-
-                            <input type="hidden"
-                                name="role"
-                                value="{{ strtoupper($selectedRole) }}">
-
-                            @error('role')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <!-- Phone Number -->
@@ -153,41 +148,18 @@
                             @enderror
                         </div>
 
-                        <!-- Status -->
-                        <div class="col-md-6 mb-5">
-                            <label for="status" class="form-label">Status</label>
+                        <!-- Status (Hidden, defaults to ACTIVE) -->
+                        <input type="hidden" name="status" value="ACTIVE">
 
+                        <!-- Status Display (Read-only) -->
+                        <div class="col-md-6 mb-5">
+                            <label for="status_display" class="form-label">Status</label>
                             <input type="text"
                                 class="form-control"
                                 value="Active"
                                 readonly
                                 disabled>
-
-                            <input type="hidden"
-                                name="is_active"
-                                value="1">
-
-                            @error('is_active')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
-
-                        <!-- With active or inavtive option
-                        <div class="col-md-6 mb-5">
-                            <label for="status" class="form-label required">Status</label>
-                            <select class="form-select @error('is_active') is-invalid @enderror"
-                                    id="is_active"
-                                    name="is_active"
-                                    required>
-                                <option value="">Select Status</option>
-                                <option value="1" {{ old('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        -->
 
                         <!-- Hostel (only for STUDENT role) -->
                         <div class="col-md-6 mb-5" id="hostel_field" style="display: none;">
