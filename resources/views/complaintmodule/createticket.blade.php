@@ -8,10 +8,17 @@
 @section('css_after')
 @endsection
 
+<script>
+    window.ticketListUrl = "{{ route('complaint.ticket.list') }}";
+</script>
+
+<script src="{{ asset('js/complaintmodule/create.js') }}"></script>
+
+
 @section('js_after')
-    <script src="{{ asset ('metronic/js/create.js')}}"></script>
-    <script src="{{ asset('metronic/plugins/global/plugins.bundle.js') }}"></script>
-    <script src="{{ asset('metronic/js/scripts.bundle.js') }}"></script>
+    {{-- <script src="{{ asset('metronic/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('metronic/js/scripts.bundle.js') }}"></script> --}}
+    <script src="{{ asset ('metronic/js/createticket.js')}}"></script>
 @endsection
 
 @section('content')
@@ -40,17 +47,16 @@
                                 <div class="row g-9 mb-8">
                                     <div class="col-12 fv-row">
                                         <label class="required fs-6 fw-semibold mb-2">Category</label>
-                                        <select class="form-select form-select-solid" name="category_id" required>
+                                        <select class="form-select form-select-solid" name="category_id">
                                             <option value="">Select a category</option>
                                             @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}">
-                                                    {{ $category->name }}
-                                                </option>
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
-
                                     </div>
                                 </div>
+
+
 
                                 <!-- Description -->
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -69,10 +75,11 @@
                                 <!-- Date  Service Not Function-->
                                 <div class="row g-9 mb-8">
                                     <div class="col-12 fv-row">
-                                        <label class="required fs-6 fw-semibold mb-2">Malfunction Date</label>
-                                        <input class="form-control form-control-solid" placeholder="Select a date" name="raised_date" type="date" />
+                                    <label class="required fs-6 fw-semibold mb-2">Malfunction Date</label>
+                                    <input class="form-control form-control-solid" placeholder="Select a date" name="raised_date" type="date" />
                                     </div>
                                 </div>
+
 
                                 <!--begin::Actions-->
                                 <div class="text-center">

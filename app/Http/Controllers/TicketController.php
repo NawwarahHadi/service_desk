@@ -37,30 +37,30 @@ class TicketController extends Controller
     // Store Ticket
     // ======================
     public function store(Request $request)
-    {
-        // $request->validate([
-        //     'title' => 'required|string|max:255',
-        //     'category_id' => 'required|exists:categories,id',
-        //     'description' => 'required|string',
-        //     'location' => 'required|string|max:255',
-        //     'raised_date' => 'required|date',
-        // ]);
+{
+    // Get last ticket ID (or 0 if no record yet)
+    $lastTicket = Ticket::orderBy('id', 'desc')->first();
+    $nextNumber = $lastTicket ? $lastTicket->id + 1 : 1;
 
-        Ticket::create([
-            'ticket_number' => 'TCK-' . strtoupper(Str::random(6)),
-            'user_id' => Auth::id(),
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'description' => $request->description,
-            'location' => $request->location,
-            'raised_date' => $request->raised_date,
-            'status' => 'pending',
-        ]);
+    // Format: TCK-001, TCK-002, ...
+    $ticketNumber = 'TCK-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
-        return redirect()
-            ->route('complaint.ticket.list')
-            ->with('success', 'Ticket created successfully!');
-    }
+    Ticket::create([
+        'ticket_number' => $ticketNumber,
+        'user_id' => Auth::id(),
+        'category_id' => $request->category_id,
+        'title' => $request->title,
+        'description' => $request->description,
+        'location' => $request->location,
+        'raised_date' => $request->raised_date,
+        'status' => 'pending',
+    ]);
+
+    return redirect()
+        ->route('complaint.ticket.list')
+        ->with('success', 'Ticket created successfully!');
+}
+
 
     // ======================
     // Ticket Details
