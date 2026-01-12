@@ -20,6 +20,7 @@ class User extends Authenticatable implements LaratrustUserContract
         'password',
         'is_active',
         'phone_num',
+        'role_id',
     ];
 
     protected $hidden = [

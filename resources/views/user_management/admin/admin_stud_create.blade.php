@@ -137,7 +137,7 @@
                         </div>
 
                         <!-- Role (Hidden, defaults to STUDENT) -->
-                        <input type="hidden" name="role" value="STUDENT">
+                        <input type="hidden" name="role_id" value="2">
 
                         <!-- Role Display (Read-only) -->
                         <div class="col-md-6 mb-5">

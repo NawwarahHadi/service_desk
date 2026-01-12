@@ -112,7 +112,7 @@ class AdminUserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role'     => ['required', Rule::exists('roles', 'name')], // laratrust role name
+            'role_id'     => ['required', Rule::exists('roles', 'id')], // laratrust role id
             'status'   => ['required', Rule::in(['ACTIVE', 'INACTIVE'])],
             'phone_num'=> ['nullable', 'string', 'max:20'],
         ]);
@@ -124,10 +124,16 @@ class AdminUserController extends Controller
             'password'  => Hash::make($request->password),
             'is_active' => $request->status === 'ACTIVE',
             'phone_num' => $request->phone_num,
+            'student_id'=> $request->student_id,
+            'role_id'   => $request->role_id,
         ]);
 
-        // Assign role (Laratrust)
-        $user->attachRole($request->role);
+        // If you are using Laratrust (which uses a separate table),
+        // you can attach the ID directly.
+        // If you are NOT using Laratrust's pivot table, you can delete this line.
+        if (method_exists($user, 'attachRole')) {
+            $user->attachRole($request->role_id);
+        }
 
         return redirect()->route('userlist')->with('success', 'User created successfully.');
     }
