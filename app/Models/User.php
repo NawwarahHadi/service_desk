@@ -65,4 +65,9 @@ class User extends Authenticatable implements LaratrustUserContract
             'category_id'
         );
     }
+
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_technician_id');
+    }
 }

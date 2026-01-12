@@ -14,25 +14,25 @@
                             <div class="menu-content">
                                 <span class="menu-heading fw-bold text-uppercase fs-7">Menu</span>
                             </div>
-                            @role('admin')
-                            <!-- Dashboard Admin Section -->
-                            <div class="menu-item">
-                                <a class="menu-link {{ request()->routeIs('dashboard') ? ' active' : '' }}"
-                                    href="{{ route('dashboard') }}">
-                                    <span class="menu-icon">
-                                        <i class="ki-duotone ki-element-11 fs-2">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                            <span class="path3"></span>
-                                            <span class="path4"></span>
-                                        </i>
-                                    </span>
-                                    <span class="menu-title fw-semibold">Dashboard</span>
-                                </a>
-                            </div>
-                            @endrole
+                            @permission('view-admin-dashboard')
+                                <!-- Dashboard Admin Section -->
+                                <div class="menu-item">
+                                    <a class="menu-link {{ request()->routeIs('dashboard') ? ' active' : '' }}"
+                                        href="{{ route('dashboard') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-element-11 fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                                <span class="path3"></span>
+                                                <span class="path4"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title fw-semibold">Dashboard</span>
+                                    </a>
+                                </div>
+                            @endpermission
 
-                            @role('student')
+                           @permission('view-student-dashboard')
                             <!-- Dashboard Student Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('dashboard.student') ? ' active' : '' }}"
@@ -48,9 +48,9 @@
                                     <span class="menu-title fw-semibold">Dashboard</span>
                                 </a>
                             </div>
-                            @endrole
+                            @endpermission
 
-                            @role('technician')
+                           @permission('view-technician-dashboard')
                             <!-- Dashboard Technian Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('dashboard.technian') ? ' active' : '' }}"
@@ -66,9 +66,10 @@
                                     <span class="menu-title fw-semibold">Dashboard</span>
                                 </a>
                             </div>
-                            @endrole
+                            @endpermission
 
-                            @role('student')
+
+                            @permission('create-complaint')
                             <!-- Ticket List Student Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('complaint.ticket.list') ? ' active' : '' }}"
@@ -84,9 +85,9 @@
                                     <span class="menu-title fw-semibold">Ticket list</span>
                                 </a>
                             </div>
-                            @endrole
+                            @endpermission
 
-                            @role('admin')
+                            @permission('assign-technician')
                             <!-- Ticket List Admin Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('admin.ticket.list') ? ' active' : '' }}"
@@ -102,9 +103,9 @@
                                     <span class="menu-title fw-semibold">Ticket list</span>
                                 </a>
                             </div>
-                            @endrole
+                            @endpermission
 
-                            @role('technician')
+                            @permission('ticket-list')
                             <!-- Ticket List Technian Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('technician.ticket.list') ? ' active' : '' }}"
@@ -120,9 +121,9 @@
                                     <span class="menu-title fw-semibold">Ticket list</span>
                                 </a>
                             </div>
-                            @endrole
+                            @endpermission
 
-                            @role('student')
+                            @permission('submit-feedback')
                             <!-- Feedback Student Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('feedback.index') ? ' active' : '' }}"
@@ -133,9 +134,10 @@
                                     <span class="menu-title fw-semibold">Feedback</span>
                                 </a>
                             </div>
-                            @endrole
+                            @endpermission
 
-                            @role('admin')
+
+                            @permission('view-all-feedback')
                             <!-- Feedback Admin Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('feedback.index_admin') ? ' active' : '' }}"
@@ -146,9 +148,9 @@
                                     <span class="menu-title fw-semibold">Feedback</span>
                                 </a>
                             </div>
-                            @endrole
+                            @endpermission
 
-                            @role('technician')
+                            @permission('view-feedback-technician')
                             <!-- Feedback Technian Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('feedback.index_technian') ? ' active' : '' }}"
@@ -159,7 +161,8 @@
                                     <span class="menu-title fw-semibold">Feedback</span>
                                 </a>
                             </div>
-                            @endrole
+                            @endpermission
+
 
                             @role('admin')
                             <!-- User Management Admin Section -->
@@ -221,7 +224,7 @@
         </div>
     </div>
     <div class="aside-footer flex-column-auto py-5" id="kt_aside_footer">
-        <a href="{{ route('logout') }}" 
+        <a href="{{ route('logout') }}"
             class="btn btn-flex btn-light-primary btn-active-light-danger w-100 shadow-sm"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
             <i class="ki-duotone ki-exit-left fs-2 me-2">
