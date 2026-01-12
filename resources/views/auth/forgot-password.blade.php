@@ -1,5 +1,5 @@
 <x-guest-layout>
-    
+
     <style>
         /* Purple Theme Styles */
         .auth-container {
@@ -295,7 +295,7 @@
 
         <!-- Logo -->
         <div class="auth-logo">
-            <img src="{{ asset('metronic/assets/media/logoservicedesk.png') }}" 
+            <img src="{{ asset('metronic/assets/media/logoservicedesk.png') }}"
                  alt="USM">
             <img src="{{ asset('metronic/assets/media/servicedeskpurple.png') }}" alt="Service Desk Logo" sizes="500px">
         </div>
@@ -326,17 +326,12 @@
             <!-- Email Address -->
             <div class="mb-4">
                 <label for="email" class="form-label">Email Address</label>
-                <input id="email" 
-                       class="form-control @error('email') is-invalid @enderror" 
-                       type="email" 
-                       name="email" 
-                       value="{{ old('email') }}" 
-                       required 
-                       autofocus
-                       placeholder="Enter your registered email">
+               <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent"  @error('email') is-invalid @enderror/>
                 @error('email')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
+                    <span class="indicator-label" style="color: red">
+                            {{ $message }}
+                    </span>
+                 @enderror
             </div>
 
             <button type="submit" class="btn-primary">
