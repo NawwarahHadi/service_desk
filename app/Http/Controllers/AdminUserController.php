@@ -137,4 +137,17 @@ class AdminUserController extends Controller
 
         return redirect()->route('userlist')->with('success', 'User created successfully.');
     }
+
+    // delete user
+    public function destroy($id)
+    {
+        // Find the user or fail
+        $user = User::findOrFail($id);
+
+        // Delete the user
+        $user->delete();
+
+        // Return a JSON response for the AJAX call
+        return response()->json(['success' => 'User deleted successfully']);
+    }
 }

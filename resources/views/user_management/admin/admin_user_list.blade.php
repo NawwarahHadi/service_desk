@@ -51,17 +51,20 @@
                 window.location.href = exportUrl;
             });
 
+            // resources/views/user_management/admin/admin_user_list.blade.php
+
             // DELETE CONFIRMATION
             $(document).on('click', '.delete-data', function(e){
                 e.preventDefault();
-                const row = $(this).closest('tr');
+                var deleteUrl = $(this).attr('href'); // Get the route URL
+                var row = $(this).closest('tr');      // Get the table row
 
                 Swal.fire({
-                    title: 'Warning!',
-                    text: 'Click Continue to delete this data.',
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
                     icon: 'warning',
-                    confirmButtonText: 'Continue',
                     showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
                     cancelButtonText: 'Cancel',
                     customClass: {
                         confirmButton: "btn btn-primary",
@@ -69,7 +72,33 @@
                     }
                 }).then((result) => {
                     if (result.value) {
-                        row.fadeOut(300, function() { $(this).remove(); });
+                        // SEND AJAX REQUEST TO SERVER
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE', // Use DELETE method
+                            data: {
+                                _token: '{{ csrf_token() }}' // Required for security
+                            },
+                            success: function(response) {
+                                // 1. Remove the row from HTML
+                                row.fadeOut(300, function() { $(this).remove(); });
+
+                                // 2. Show Success Message
+                                Swal.fire(
+                                    'Deleted!',
+                                    'User has been deleted.',
+                                    'success'
+                                );
+                            },
+                            error: function(xhr) {
+                                // Show Error Message
+                                Swal.fire(
+                                    'Error!',
+                                    'Something went wrong. Please try again.',
+                                    'error'
+                                );
+                            }
+                        });
                     }
                 });
             });
