@@ -18,6 +18,7 @@
 @section('js_after')
     {{-- <script src="{{ asset('metronic/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('metronic/js/scripts.bundle.js') }}"></script> --}}
+    <script src="{{ asset ('metronic/js/button_loading.js')}}"></script>
     <script src="{{ asset ('metronic/js/createticket.js')}}"></script>
 @endsection
 

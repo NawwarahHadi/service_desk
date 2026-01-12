@@ -60,6 +60,13 @@ var KTCreateTicket = function () {
             validator.validate().then(function (status) {
                 if (status === 'Valid') {
 
+                    submitButton.setAttribute('data-kt-indicator', 'on');
+                    submitButton.disabled = true;
+                    setTimeout(function () {
+                        // Hide spinner
+                        submitButton.removeAttribute('data-kt-indicator');
+                        submitButton.disabled = false;
+
                     Swal.fire({
                         text: "Ticket has been successfully submitted!",
                         icon: "success",
@@ -74,7 +81,8 @@ var KTCreateTicket = function () {
                         }
                     });
 
-                } else {
+                }, 2000);
+            } else {
                     Swal.fire({
                         text: "Please fill in all required fields.",
                         icon: "error",
