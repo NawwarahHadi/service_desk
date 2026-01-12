@@ -84,7 +84,7 @@
             {{-- HEADER --}}
             <div class="card-header border-0 pt-6">
                 <div class="card-title">
-                    <h3 style="font-size: 10; font-weight: 600;">User List</h3>  
+                    <h3 style="font-size: 10; font-weight: 600;">User List</h3>
                 </div>
 
                 {{-- TOOLBAR --}}
@@ -187,8 +187,7 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
 
-                                {{-- FIXED ROLE DISPLAY --}}
-                                <td>{{ $user->roles->first()->name ?? '—' }}</td>
+                                <td>{{ $user->role->name ?? '—' }}</td>
 
                                 <td>
                                     @if($user->is_active)

@@ -16,7 +16,7 @@ class AdminUserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with('roles');
+        $query = User::with('role');
 
         // Search
         if ($request->filled('search')) {

@@ -66,4 +66,10 @@ class User extends Authenticatable implements LaratrustUserContract
             'category_id'
         );
     }
+
+    public function role()
+    {
+        // This tells Laravel: "My role_id column belongs to the Role model"
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 }
