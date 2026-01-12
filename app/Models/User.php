@@ -20,6 +20,7 @@ class User extends Authenticatable implements LaratrustUserContract
         'password',
         'is_active',
         'phone_num',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -64,5 +65,10 @@ class User extends Authenticatable implements LaratrustUserContract
             'user_id',      // ✅ matches your table
             'category_id'
         );
+    }
+
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_technician_id');
     }
 }

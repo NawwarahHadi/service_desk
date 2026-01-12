@@ -45,5 +45,15 @@ class Ticket extends Model
     public function technician()
     {
         return $this->belongsTo(User::class, 'assigned_technician_id');
+
+    }
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'ticket_id');
     }
 }
