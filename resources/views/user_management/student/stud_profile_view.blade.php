@@ -116,7 +116,7 @@
 
                     <div class="col-12 d-flex justify-content-end gap-2">
                         <a href="{{ route('dashboard') }}" class="btn btn-light">Cancel</a>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-info">
                             <i class="ki-duotone ki-check fs-2"></i>
                             Update Profile
                         </button>
