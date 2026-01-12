@@ -42,7 +42,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="student_id" class="form-label required">Student ID</label>
+                        <label for="student_id" class="form-label required">USM ID</label>
                         <input type="text"
                                id="student_id"
                                name="student_id"

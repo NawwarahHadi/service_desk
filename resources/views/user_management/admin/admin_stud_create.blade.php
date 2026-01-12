@@ -50,12 +50,6 @@
             </div>
 
             <div class="card-body">
-                <!-- UserID Display (Auto-generated) -->
-                <div class="alert alert-info mb-5">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>Note:</strong> UserID will be automatically generated when the student account is created.
-                </div>
-
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul class="mb-0">
@@ -101,7 +95,7 @@
 
                         <!-- Student ID -->
                         <div class="col-md-6 mb-5">
-                            <label for="student_id" class="form-label required">Student ID</label>
+                            <label for="student_id" class="form-label required">USM ID</label>
                             <input type="text"
                                    class="form-control @error('student_id') is-invalid @enderror"
                                    id="student_id"
