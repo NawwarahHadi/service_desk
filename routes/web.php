@@ -47,12 +47,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
 // Admin: show user edit page for a specific user
 Route::get('/admin/users/{user}/update', function (\App\Models\User $user) {
-    // THE FIX: Fetch all roles
-    $roles = DB::table('roles')->get();
-    // Pass BOTH 'user' AND 'roles' to the view
+    $roles = \Illuminate\Support\Facades\DB::table('roles')->get();
     return view('user_management.admin.admin_user_update', compact('user', 'roles'));
-})->name('admin.users.update');
+})->name('admin.users.edit');
 
+Route::patch('/admin/users/{id}/update', [AdminUserController::class, 'update'])
+    ->name('admin.users.update');
+    
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(function () {
 
     // User list
