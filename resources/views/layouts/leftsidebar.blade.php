@@ -105,7 +105,7 @@
                             </div>
                             @endpermission
 
-                            @permission('ticket-list')
+                            @permission('technician-ticket-list')
                             <!-- Ticket List Technian Section -->
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('technician.ticket.list') ? ' active' : '' }}"

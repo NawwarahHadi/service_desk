@@ -18,8 +18,11 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-       $feedback = feedback::latest()->get();
+        $studentId = Auth::id(); // get the logged-in student
 
+        $feedback = Feedback::where('user_id', $studentId)
+                            ->with(['ticket.technician', 'student'])
+                            ->get();
         $data = [
             'feedback' => $feedback,
         ];
@@ -30,7 +33,7 @@ class FeedbackController extends Controller
 
     public function index_admin()
     {
-        $feedback = Feedback::with(['ticket.student', 'ticket.technician'])->get();
+        $feedback = Feedback::with(['student', 'ticket.technician'])->get();
 
         $data = [
             'feedback' => $feedback,
@@ -60,18 +63,22 @@ class FeedbackController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($id)
+    // public function create($ticketNumber)
+    // {
+    //     $ticket = Ticket::where('ticket_number', $ticketNumber)
+    //                     ->with('technician')
+    //                     ->firstOrFail();
+
+    //     return view('feedback.create', compact('ticket'));
+    // }
+    public function create($ticketId)
     {
-        $ticket = Ticket::with('technician')->findOrFail($id);
+        $ticket = Ticket::with('technician')->findOrFail($ticketId);
 
-
-        $data = [
-            'ticket' => $ticket,
-        ];
-
-        return  view ('feedback.create',$data);
-
+        return view('feedback.create', compact('ticket'));
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -92,9 +99,6 @@ class FeedbackController extends Controller
         Feedback::create([
             'ticket_id' => $request->ticket_id,
             'user_id'  => Auth::id(),
-            'student_name' => Auth::user()->name,
-            'title' => $request->title,
-            'technician_name' => $request->technician_name,
             'rating' => $request->rating,
             'comment' => $request->comment
         ]);

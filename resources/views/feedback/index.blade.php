@@ -89,11 +89,11 @@
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->title }}
+                                {{ $feedbacks->ticket->title }}
                             </td>
 
                             <td style="vertical-align: middle; text-align: left;">
-                                {{ $feedbacks->technician_name }}
+                                {{ $feedbacks->ticket->technician->name }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;" data-rating="{{ $feedbacks->rating }}">
