@@ -82,7 +82,7 @@ class AdminUserController extends Controller
 
             $no = 1;
             foreach ($users as $user) {
-                $role = $user->roles->first()->name ?? '—';
+                $role = $user->role->name ?? '—';
 
                 fputcsv($file, [
                     $no++,
@@ -109,12 +109,13 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role_id'     => ['required', Rule::exists('roles', 'id')], // laratrust role id
-            'status'   => ['required', Rule::in(['ACTIVE', 'INACTIVE'])],
-            'phone_num'=> ['nullable', 'string', 'max:20'],
+            'name'       => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'email', 'max:255', 'unique:users'],
+            'student_id' => ['required', 'unique:users,student_id'],
+            'password'   => ['required', 'string', 'min:8', 'confirmed'],
+            'role_id'    => ['required', Rule::exists('roles', 'id')],
+            'status'     => ['required', Rule::in(['ACTIVE', 'INACTIVE'])],
+            'phone_num'  => ['nullable', 'string', 'max:20'],
         ]);
 
         // Create user first
@@ -128,12 +129,7 @@ class AdminUserController extends Controller
             'role_id'   => $request->role_id,
         ]);
 
-        // If you are using Laratrust (which uses a separate table),
-        // you can attach the ID directly.
-        // If you are NOT using Laratrust's pivot table, you can delete this line.
-        if (method_exists($user, 'attachRole')) {
-            $user->attachRole($request->role_id);
-        }
+        $user->syncRoles([$request->role_id]);
 
         return redirect()->route('userlist')->with('success', 'User created successfully.');
     }
