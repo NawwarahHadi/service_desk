@@ -51,7 +51,7 @@
         <div class="card-body">
             @php
                 $fields = [
-                    'Ticket Number' => $ticket->id,
+                    'Ticket Number' => $ticket->ticket_number,
                     'Student ID' => $ticket->user->student_id ?? '-',
                     'Title' => $ticket->title,
                     'Category' => $ticket->category->name ?? '-',
