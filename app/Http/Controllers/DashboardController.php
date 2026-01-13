@@ -11,11 +11,11 @@ class DashboardController extends Controller
     {
         // direct DB counts using role relation (Laratrust or your roles relation)
         $totalStudents = User::whereHas('roles', function ($q) {
-            $q->where('name', 'student');
+            $q->where('name', 'Student');
         })->count();
 
         $totalTechnicians = User::whereHas('roles', function ($q) {
-            $q->where('name', 'technician');
+            $q->where('name', 'Technician');
         })->count();
 
         // Dummy data for chart

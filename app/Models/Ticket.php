@@ -25,7 +25,7 @@ class Ticket extends Model
     ];
 
     protected $casts = [
-        'raised_date' => 'date',
+        'raised_date' => 'datetime',
         'resolved_date' => 'datetime',
     ];
 
