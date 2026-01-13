@@ -39,7 +39,7 @@
                         <tr>
                             <td>{{ $ticket->ticket_number }}</td>
 
-                            <td>{{ $ticket->user->userid ?? '-' }}</td>
+                            <td>{{ $ticket->user->student_id ?? '-' }}</td>
 
                             <td>
                                 <a href="{{ route('technician.ticket.details', $ticket->id) }}"
