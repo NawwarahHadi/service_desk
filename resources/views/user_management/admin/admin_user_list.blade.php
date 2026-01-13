@@ -51,17 +51,20 @@
                 window.location.href = exportUrl;
             });
 
+            // resources/views/user_management/admin/admin_user_list.blade.php
+
             // DELETE CONFIRMATION
             $(document).on('click', '.delete-data', function(e){
                 e.preventDefault();
-                const row = $(this).closest('tr');
+                var deleteUrl = $(this).attr('href'); // Get the route URL
+                var row = $(this).closest('tr');      // Get the table row
 
                 Swal.fire({
-                    title: 'Warning!',
-                    text: 'Click Continue to delete this data.',
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
                     icon: 'warning',
-                    confirmButtonText: 'Continue',
                     showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
                     cancelButtonText: 'Cancel',
                     customClass: {
                         confirmButton: "btn btn-primary",
@@ -69,7 +72,33 @@
                     }
                 }).then((result) => {
                     if (result.value) {
-                        row.fadeOut(300, function() { $(this).remove(); });
+                        // SEND AJAX REQUEST TO SERVER
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE', // Use DELETE method
+                            data: {
+                                _token: '{{ csrf_token() }}' // Required for security
+                            },
+                            success: function(response) {
+                                // 1. Remove the row from HTML
+                                row.fadeOut(300, function() { $(this).remove(); });
+
+                                // 2. Show Success Message
+                                Swal.fire(
+                                    'Deleted!',
+                                    'User has been deleted.',
+                                    'success'
+                                );
+                            },
+                            error: function(xhr) {
+                                // Show Error Message
+                                Swal.fire(
+                                    'Error!',
+                                    'Something went wrong. Please try again.',
+                                    'error'
+                                );
+                            }
+                        });
                     }
                 });
             });
@@ -84,7 +113,7 @@
             {{-- HEADER --}}
             <div class="card-header border-0 pt-6">
                 <div class="card-title">
-                    <h3 style="font-size: 10; font-weight: 600;">User List</h3>  
+                    <h3 style="font-size: 10; font-weight: 600;">User List</h3>
                 </div>
 
                 {{-- TOOLBAR --}}
@@ -149,7 +178,6 @@
 
             {{-- TABLE --}}
             <div class="card-body">
-
                 <style>
                     .page-item.active .page-link {
                         background-color: #7239EA !important;
@@ -165,11 +193,31 @@
                     }
                 </style>
 
+                @if(session('success'))
+                    <div class="alert alert-success d-flex align-items-center p-5 mb-10">
+                        <i class="ki-duotone ki-shield-tick fs-2hx text-success me-4">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
+                        <div class="d-flex flex-column">
+                            <h4 class="mb-1 text-success">Success</h4>
+                            <span>{{ session('success') }}</span>
+                        </div>
+                        {{-- Close button --}}
+                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                            <i class="ki-duotone ki-cross fs-1 text-success">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </button>
+                    </div>
+                @endif
+
                 <table id="users-table" class="table align-middle table-row-dashed fs-6 gy-5">
                     <thead>
                         <tr class="text-start text-dark fw-bold fs-7 text-uppercase gs-0">
                             <th>No</th>
-                            <th>UserID</th>
+                            <th>USM ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
@@ -183,12 +231,11 @@
                         @foreach($users as $i => $user)
                             <tr>
                                 <td>{{ $i + 1 }}</td>
-                                <td>{{ $user->userid }}</td>
+                                <td>{{ $user->student_id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
 
-                                {{-- FIXED ROLE DISPLAY --}}
-                                <td>{{ $user->roles->first()->name ?? '—' }}</td>
+                                <td>{{ $user->role->name ?? '—' }}</td>
 
                                 <td>
                                     @if($user->is_active)
@@ -201,7 +248,7 @@
                                 <td>{{ $user->created_at?->format('Y-m-d') }}</td>
 
                                 <td>
-                                    <a href="{{ route('admin.users.update', $user->id) }}"
+                                    <a href="{{ route('admin.users.edit', $user->id) }}"
                                        class="btn btn-sm btn-info btn-icon" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>

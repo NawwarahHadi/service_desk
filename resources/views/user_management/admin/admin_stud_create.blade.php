@@ -50,12 +50,6 @@
             </div>
 
             <div class="card-body">
-                <!-- UserID Display (Auto-generated) -->
-                <div class="alert alert-info mb-5">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>Note:</strong> UserID will be automatically generated when the student account is created.
-                </div>
-
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul class="mb-0">
@@ -101,7 +95,7 @@
 
                         <!-- Student ID -->
                         <div class="col-md-6 mb-5">
-                            <label for="student_id" class="form-label required">Student ID</label>
+                            <label for="student_id" class="form-label required">USM ID</label>
                             <input type="text"
                                    class="form-control @error('student_id') is-invalid @enderror"
                                    id="student_id"
@@ -137,11 +131,11 @@
                         </div>
 
                         <!-- Role (Hidden, defaults to STUDENT) -->
-                        <input type="hidden" name="role" value="STUDENT">
+                        <input type="hidden" name="role_id" value="2">
 
                         <!-- Role Display (Read-only) -->
                         <div class="col-md-6 mb-5">
-                            <label for="role_display" class="form-label required">Role</label>
+                            <label for="role_display" class="form-label">Role</label>
                             <input type="text"
                                 class="form-control"
                                 value="Student"
@@ -167,7 +161,7 @@
 
                         <!-- Status Display (Read-only) -->
                         <div class="col-md-6 mb-5">
-                            <label for="status_display" class="form-label required">Status</label>
+                            <label for="status_display" class="form-label">Status</label>
                             <input type="text"
                                 class="form-control"
                                 value="Active"

@@ -72,7 +72,7 @@
             <table id="feedbackTable" class="m-datatable table align-middle table-row-dashed fs-6 gy-5">
                 <thead>
                     <tr class="text-dark fw-bold fs-7 text-uppercase gs-0">
-                        <th style="width:10%; text-align:left;">Ticket ID</th>
+                        <th style="width:10%; text-align:left;">Ticket Number</th>
                         <th style="width:10%; text-align:left;">Student ID</th>
                         <th style="width:10%; text-align:left;">Student Name</th>
                         <th style="width:15%; text-align:left;">Title</th>
@@ -87,23 +87,23 @@
                         <tr>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->ticket_id }}
+                                {{ $feedbacks->ticket->ticket_number }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->userid }}
+                                {{ $feedbacks->student->student_id }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->student_name }}
+                                {{$feedbacks->student->name }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->title }}
+                                {{  $feedbacks->ticket->title }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->technician_name }}
+                                {{ $feedbacks->ticket->technician->name }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;" data-rating="{{ $feedbacks->rating }}">

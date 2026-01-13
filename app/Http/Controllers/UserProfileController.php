@@ -71,7 +71,7 @@ class UserProfileController extends Controller
 
         return view('user_management.technician.tech_profile_view', compact('user'));
     }
-
+    
     /**
      * Update Technician Profile
      */
@@ -84,15 +84,23 @@ class UserProfileController extends Controller
         }
 
         $validated = $request->validate([
-            'name'      => ['required', 'string', 'max:255'],
-            'email'     => ['required','email','max:255', Rule::unique('users', 'email')->ignore($user->id)],
-            'phone_num' => ['nullable', 'string', 'max:255'],
-            'password'  => ['nullable', 'string', 'min:8', 'confirmed'],
+            'name'       => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+
+            // 1. ADD THIS LINE (Validate the student_id)
+            'student_id' => ['required', Rule::unique('users', 'student_id')->ignore($user->id)],
+
+            'phone_num'  => ['nullable', 'string', 'max:255'],
+            'password'   => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $user->name      = $validated['name'];
-        $user->email     = $validated['email'];
-        $user->phone_num = $validated['phone_num'] ?? null;
+        $user->name       = $validated['name'];
+        $user->email      = $validated['email'];
+
+        // 2. ADD THIS LINE (Assign the new value)
+        $user->student_id = $validated['student_id'];
+
+        $user->phone_num  = $validated['phone_num'] ?? null;
 
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);

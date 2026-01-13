@@ -78,87 +78,109 @@
         //  PIE CHART (Complaint Summary)
         // =======================================================
         const complaintCanvas = document.getElementById('complaintSummaryChart');
+        const complaintChartWrapper = document.getElementById('complaintChartWrapper');
 
-        if(complaintCanvas) {
+        if(complaintCanvas && complaintChartWrapper) {
             const complaintCtx = complaintCanvas.getContext('2d');
             const complaintLabels = complaintData.map(item => item.category);
             const complaintValues = complaintData.map(item => item.value);
+            const totalComplaints = complaintValues.reduce((sum, value) => sum + value, 0);
 
-            // Dynamic Colors
-            const complaintColors = complaintData.map(item => {
-                const cat = (item.category || '').toString().toLowerCase();
-                if (cat.includes('completed')) return successColor;
-                if (cat.includes('pending')) return warningColor;
-                if (cat.includes('cancel')) return dangerColor;
-                return infoColor;
-            });
+            if (totalComplaints === 0) {
+                // No data available - show message
+                complaintCanvas.style.display = 'none';
+                const noDataDiv = document.createElement('div');
+                noDataDiv.className = 'd-flex align-items-center justify-content-center h-100';
+                noDataDiv.innerHTML = '<span class="text-muted fs-4">No Data Available</span>';
+                complaintChartWrapper.appendChild(noDataDiv);
+            } else {
+                // Dynamic Colors
+                const complaintColors = complaintData.map(item => {
+                    const cat = (item.category || '').toString().toLowerCase();
+                    if (cat.includes('completed')) return successColor;
+                    if (cat.includes('pending')) return warningColor;
+                    if (cat.includes('cancel')) return dangerColor;
+                    return infoColor;
+                });
 
-            new Chart(complaintCtx, {
-                type: 'doughnut', // Doughnut looks cleaner than Pie on dashboards
-                data: {
-                    labels: complaintLabels,
-                    datasets: [{
-                        data: complaintValues,
-                        backgroundColor: complaintColors,
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // CRITICAL for responsiveness
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20
+                new Chart(complaintCtx, {
+                    type: 'doughnut', // Doughnut looks cleaner than Pie on dashboards
+                    data: {
+                        labels: complaintLabels,
+                        datasets: [{
+                            data: complaintValues,
+                            backgroundColor: complaintColors,
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // CRITICAL for responsiveness
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         // =======================================================
         //  BAR CHART (Feedback & Ratings)
         // =======================================================
         const feedbackCanvas = document.getElementById('feedbackRatingsChart');
+        const feedbackChartWrapper = document.querySelector('#feedbackRatingsChart').closest('.chart-outer-container');
 
-        if(feedbackCanvas) {
+        if(feedbackCanvas && feedbackChartWrapper) {
             const feedbackCtx = feedbackCanvas.getContext('2d');
             const feedbackLabels = feedbackData.map(item => item.rating);
             const feedbackCount = feedbackData.map(item => item.count);
+            const totalFeedback = feedbackCount.reduce((sum, count) => sum + count, 0);
 
-            new Chart(feedbackCtx, {
-                type: 'bar',
-                data: {
-                    labels: feedbackLabels,
-                    datasets: [{
-                        label: "Count",
-                        data: feedbackCount,
-                        backgroundColor: warningColor,
-                        borderRadius: 4,
-                        barThickness: 30, // Increase this value for wider bars
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // CRITICAL for responsiveness
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { borderDash: [2, 2] } // Dashed grid lines
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
+            if (totalFeedback === 0) {
+                // No data available - show message
+                feedbackCanvas.style.display = 'none';
+                const noDataDiv = document.createElement('div');
+                noDataDiv.className = 'd-flex align-items-center justify-content-center h-100';
+                noDataDiv.innerHTML = '<span class="text-muted fs-4">No Data Available</span>';
+                feedbackChartWrapper.appendChild(noDataDiv);
+            } else {
+                new Chart(feedbackCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: feedbackLabels,
+                        datasets: [{
+                            label: "Count",
+                            data: feedbackCount,
+                            backgroundColor: warningColor,
+                            borderRadius: 4,
+                            barThickness: 30, // Increase this value for wider bars
+                        }]
                     },
-                    plugins: {
-                        legend: { display: false } // Hide legend for simple bar charts
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // CRITICAL for responsiveness
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { borderDash: [2, 2] } // Dashed grid lines
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false } // Hide legend for simple bar charts
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     });
     </script>
@@ -179,7 +201,7 @@
 
                     <!-- Students Card -->
                     <div class="col-md-6 col-xl-6">
-                        <a href="{{ route('admin.userlist', ['role' => 'student']) }}" class="card bg-primary hoverable card-xl-stretch h-100">
+                        <a href="{{ route('admin.userlist', ['role' => 'Student']) }}" class="card bg-primary hoverable card-xl-stretch h-100">
                             <div class="card-body">
                                 <!-- YOUR CUSTOM LAYOUT: Stack on mobile (flex-column), Row on Desktop (flex-md-row) -->
                                 <div class="d-flex stat-row justify-content-between align-items-center mb-2 mt-5 flex-column flex-md-row">
@@ -228,12 +250,12 @@
                         <div class="card card-xl-stretch h-100">
                             <div class="card-header border-0 pt-5">
                                 <h3 class="card-title align-items-start flex-column">
-                                    <span class="card-label fw-bold fs-3 text-dark">Complaint Summary</span>
+                                    <span class="card-label fw-bold fs-3 text-dark">Complaint Ticket Summary</span>
                                     <span class="text-muted mt-1 fw-semibold fs-7">Overview of request statuses</span>
                                 </h3>
                                 <!-- Toolbar could go here -->
                             </div>
-                            <a href="{{ route('feedback.index_admin') }}" class="card hoverable card-xl-stretch h-100">
+                            <a href="{{ route('admin.ticket.list') }}" class="card hoverable card-xl-stretch h-100">
                                 <div class="card-body d-flex flex-center flex-column pt-0 px-0">
                                     <!-- Added wrapper for Chart.js sizing -->
                                     <div class="chart-outer-container" id="complaintChartWrapper">
@@ -253,7 +275,7 @@
                                     <span class="text-muted mt-1 fw-semibold fs-7">Student satisfaction levels</span>
                                 </h3>
                             </div>
-                            <a href="{{ route('feedback.index') }}" class="card hoverable card-xl-stretch h-100">
+                            <a href="{{ route('feedback.index_admin') }}" class="card hoverable card-xl-stretch h-100">
                                 <div class="card-body pt-0 px-5">
                                     <!-- Added wrapper for Chart.js sizing -->
                                     <div class="chart-outer-container">

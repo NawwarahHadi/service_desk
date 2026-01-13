@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,14 +13,17 @@ class User extends Authenticatable implements LaratrustUserContract
 {
     use HasFactory, Notifiable, HasRolesAndPermissions;
 
+    protected $table = 'users';
+
+    // 1. REMOVED 'userid' from this list
     protected $fillable = [
-        'userid',
         'name',
         'email',
         'student_id',
         'password',
         'is_active',
         'phone_num',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -36,22 +40,26 @@ class User extends Authenticatable implements LaratrustUserContract
         ];
     }
 
-    protected static function boot()
+    // 2. REMOVED the boot() function completely.
+    // Laravel will now automatically use the default 'id' column as the primary key.
+
+    public function categories()
     {
-        parent::boot();
+        return $this->belongsToMany(
+            \App\Models\Category::class,
+            'technician_categories',
+            'user_id',
+            'category_id'
+        );
+    }
 
-        static::creating(function ($user) {
-            if (empty($user->userid)) {
-                $lastUser = static::where('userid', 'like', 'STUD%')
-                    ->orderByRaw('CAST(SUBSTRING(userid, 5) AS UNSIGNED) DESC')
-                    ->first();
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 
-                $newNumber = $lastUser
-                    ? ((int) substr($lastUser->userid, 5) + 1)
-                    : 1;
-
-                $user->userid = 'STUD' . str_pad($newNumber, 6, '0', STR_PAD_LEFT);
-            }
-        });
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_technician_id');
     }
 }

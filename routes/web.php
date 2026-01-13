@@ -47,19 +47,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
 // Admin: show user edit page for a specific user
 Route::get('/admin/users/{user}/update', function (\App\Models\User $user) {
-    // THE FIX: Fetch all roles
-    $roles = DB::table('roles')->get();
-    // Pass BOTH 'user' AND 'roles' to the view
+    $roles = \Illuminate\Support\Facades\DB::table('roles')->get();
     return view('user_management.admin.admin_user_update', compact('user', 'roles'));
-})->name('admin.users.update');
+})->name('admin.users.edit');
 
-
-// Admin: destroy a specific user (to be implemented)
-Route::get('/admin/admin_users_destroy/{id}', function ($id) {
-    return "Destroy User $id (to be implemented)";
-})->name('admin.users.destroy');
-
-
+Route::patch('/admin/users/{id}/update', [AdminUserController::class, 'update'])
+    ->name('admin.users.update');
+    
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(function () {
 
     // User list
@@ -90,9 +84,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
         return view('user_management.admin.admin_user_update', compact('user', 'roles'));
     })->name('admin.users.edit');
 
-    // destroy
-    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])
-        ->name('admin.users.destroy');
+    // Destroy user (delete)
+    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 
@@ -128,22 +121,32 @@ Route::get('/dashboard', [DashboardController::class, 'technian']) //for  techni
 Route::middleware('auth')->group(function () {
 
     //Complaint Ticket Module
+    Route::middleware('auth')->group(function () {
+
     Route::prefix('complaint')->name('complaint.')->group(function () {
-        Route::get('/createticket', function () {
-            return view('complaintmodule.createticket');
-        });
-        Route::get('/ticketlistdata', [TicketController::class, 'index'])->name('ticket.list');
-        Route::get('/ticket/{id}', [TicketController::class, 'show'])->name('ticket.details');
 
+        Route::get('/createticket', [TicketController::class, 'create'])
+            ->name('ticket.create');
 
+        Route::post('/save', [TicketController::class, 'store'])
+            ->name('ticket.store');
+
+        Route::get('/ticketlistdata', [TicketController::class, 'index'])
+            ->name('ticket.list');
+
+        Route::get('/ticket/{ticket_number}', [TicketController::class, 'show'])
+            ->name('ticket.details');
     });
+});
+
+
 
     //Feedback
     Route::prefix('feedback')->name('feedback.')->group(function () {
         Route::get('/index', [FeedbackController::class, 'index'])->name('index');
         Route::get('/Admin', [FeedbackController::class, 'index_admin'])->name('index_admin');
         Route::get('/technian', [FeedbackController::class, 'index_technian'])->name('index_technian');
-        Route::get('/create', [FeedbackController::class, 'create'])->name('create');
+        Route::get('/create/{ticket}', [FeedbackController::class, 'create'])->name('create');
         Route::post('/save', [FeedbackController::class, 'store'])->name('save');
     });
 
@@ -170,8 +173,6 @@ Route::middleware('auth')->group(function () {
             ->name('technician.ticket.update.submit');
     });
 
-
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -196,6 +197,33 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/ticket/{id}', [TicketController::class, 'show'])->name('ticket.details');
 
+// test technician
+Route::middleware(['auth'])->prefix('technician')->name('technician.')->group(function () {
+
+    Route::get('/tickets', [TechnicianTicketController::class, 'index'])
+        ->name('ticket.list');
+
+    Route::get('/tickets/{id}', [TechnicianTicketController::class, 'show'])
+        ->name('ticket.details');
+
+    Route::get('/tickets/{id}/update', [TechnicianTicketController::class, 'edit'])
+        ->name('ticket.update');
+
+    Route::post('/tickets/{id}/update', [TechnicianTicketController::class, 'update'])
+        ->name('ticket.update.submit');
+});
+
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/tickets', [AdminTicketController::class, 'index'])
+        ->name('ticket.list');
+
+    Route::get('/tickets/{id}', [AdminTicketController::class, 'show'])
+        ->name('ticket.details');
+
+    Route::post('/assign-technician', [AdminTicketController::class, 'assignTechnician'])
+        ->name('assign.technician');
+});
 
 
 require __DIR__.'/auth.php';
