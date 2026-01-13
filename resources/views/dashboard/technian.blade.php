@@ -206,7 +206,7 @@
                                     <span class="text-muted mt-1 fw-semibold fs-7">Student satisfaction levels</span>
                                 </h3>
                             </div>
-                            <a href="{{ route('feedback.index_technician') }}" class="card hoverable card-xl-stretch h-100">
+                            <a href="{{ route('feedback.index_technian') }}" class="card hoverable card-xl-stretch h-100">
                                 <div class="card-body pt-0 px-5">
                                     <!-- Added wrapper for Chart.js sizing -->
                                     <div class="chart-outer-container">

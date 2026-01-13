@@ -42,7 +42,7 @@
             </div>
 
             <div class="mb-4">
-                <h6 class="fw-semibold text-muted mb-1">Date Service Not Function</h6>
+                <h6 class="fw-semibold text-muted mb-1">Malfunction Date</h6>
                 <p class="fs-6 mb-0">{{ optional($ticket->raised_date)->format('d/m/Y H:i') ?? '-' }}</p>
             </div>
 
