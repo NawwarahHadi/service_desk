@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <table class="m-datatable table align-middle table-row-dashed fs-6 gy-5">
                 <thead>
                     <tr class="text-start text-dark fw-bold fs-7 text-uppercase gs-0">
-                        <th>Ticket ID</th>
+                        <th>Ticket Number</th>
                         <th>Student ID</th>
                         <th>Title</th>
                         <th>Category</th>
@@ -89,8 +89,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <tbody class="fw-semibold">
                     @foreach ($tickets as $ticket)
                         <tr>
-                            <td>{{ $ticket->id }}</td>
-                            <td>{{ $ticket->user->userid ?? '-' }}</td>
+                            <td>{{ $ticket->ticket_number }}</td>
+                            <td>{{ $ticket->user->student_id ?? '-' }}</td>
                             <td>
                                 <a href="{{ route('admin.ticket.details', $ticket->id) }}" class="fw-bold text-decoration-none text-dark">
                                     {{ $ticket->title }}

@@ -52,7 +52,7 @@ class Ticket extends Model
         return $this->hasOne(Feedback::class);
     }
 
-    public function feedbacks()
+    public function number()
     {
         return $this->hasMany(Feedback::class, 'ticket_id');
     }
