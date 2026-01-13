@@ -47,7 +47,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 // Admin: show user edit page for a specific user
 Route::get('/admin/users/{user}/update', function (\App\Models\User $user) {
     $roles = \Illuminate\Support\Facades\DB::table('roles')->get();
-    return view('user_management.admin.admin_user_update', compact('user', 'roles'));
+
+    // 1. Fetch all available categories
+    $categories = \App\Models\Category::all();
+
+    // 2. Load the user's existing categories (so we know which boxes to check)
+    $user->load('categories');
+
+    return view('user_management.admin.admin_user_update', compact('user', 'roles', 'categories'));
 })->name('admin.users.edit');
 
 Route::patch('/admin/users/{id}/update', [AdminUserController::class, 'update'])
