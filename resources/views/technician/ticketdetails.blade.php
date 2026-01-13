@@ -13,7 +13,7 @@
         <div class="card-body">
             <div class="mb-4">
                 <h6 class="fw-semibold text-muted mb-1">Ticket Number</h6>
-                <p class="fs-6 mb-0">{{ $ticket->id }}</p>
+                <p class="fs-6 mb-0">{{ $ticket->ticket_number }}</p>
             </div>
 
             <div class="mb-4">

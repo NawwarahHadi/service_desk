@@ -85,7 +85,7 @@
                         <tr>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->ticket_id }}
+                                {{ $feedbacks->ticket->ticket_number }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">

@@ -89,8 +89,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <tbody class="fw-semibold">
                     @foreach ($tickets as $ticket)
                         <tr>
-                            <td>{{ $ticket->id }}</td>
-                            <td>{{ $ticket->user->userid ?? '-' }}</td>
+                            <td>{{ $ticket->ticket_number }}</td>
+                            <td>{{ $ticket->user->student_id ?? '-' }}</td>
                             <td>
                                 <a href="{{ route('admin.ticket.details', $ticket->id) }}" class="fw-bold text-decoration-none text-dark">
                                     {{ $ticket->title }}
