@@ -31,12 +31,12 @@
                     @csrf
                     @method('PATCH')
 
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <label class="form-label">User ID</label>
                         <input type="text" class="form-control" value="{{ $user->userid }}" readonly>
-                    </div>
+                    </div> --}}
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="form-label">Role</label>
                         <input type="text" class="form-control" value="{{ optional($user->role)->name ?? 'Technician' }}" readonly>
                     </div>
@@ -112,6 +112,28 @@
                                name="password_confirmation"
                                class="form-control"
                                autocomplete="new-password">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Assigned Skills / Categories</label>
+                        <div class="p-3 bg-light rounded border">
+                            @if($user->categories && $user->categories->count() > 0)
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach($user->categories as $category)
+                                        <span class="badge badge-info fs-6">
+                                            {{ $category->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @else
+                                <span class="text-muted small fst-italic">
+                                    No specific maintenance categories assigned yet.
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-text text-muted mt-1">
+                            These are assigned by the Administrator based on your expertise.
+                        </div>
                     </div>
 
                     <div class="col-12 d-flex justify-content-end gap-2">

@@ -107,7 +107,7 @@
                             @enderror
                         </div>
 
-                        <!-- Password -->
+                        {{-- <!-- Password -->
                         <div class="col-md-6 mb-5">
                             <label for="password" class="form-label required">Password</label>
                             <input type="password"
@@ -128,8 +128,11 @@
                                    id="password_confirmation"
                                    name="password_confirmation"
                                    required>
-                        </div>
+                        </div> --}}
 
+                        <input type="hidden" name="password" value="12345678">
+                        <input type="hidden" name="password_confirmation" value="12345678">
+                        
                         <!-- Role (Hidden, defaults to STUDENT) -->
                         <input type="hidden" name="role_id" value="2">
 
