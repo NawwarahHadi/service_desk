@@ -81,28 +81,8 @@
                             @enderror
                         </div>
 
-                        <!-- Password -->
-                        <div class="col-md-6 mb-5">
-                            <label for="password" class="form-label required">Password</label>
-                            <input type="password"
-                                   class="form-control @error('password') is-invalid @enderror"
-                                   id="password"
-                                   name="password"
-                                   required>
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Password Confirmation -->
-                        <div class="col-md-6 mb-5">
-                            <label for="password_confirmation" class="form-label required">Confirm Password</label>
-                            <input type="password"
-                                   class="form-control"
-                                   id="password_confirmation"
-                                   name="password_confirmation"
-                                   required>
-                        </div>
+                        <input type="hidden" name="password" value="12345678">
+                        <input type="hidden" name="password_confirmation" value="12345678">
 
                         <?php
                             // Get the role from the old input (on validation failure) or the URL query parameter 'role'
@@ -175,6 +155,41 @@
                             @enderror
                             <div class="form-text">Optional - Only applicable for students</div>
                         </div>
+                    </div>
+
+                    <div class="separator separator-dashed my-8"></div>
+
+                    <div class="mb-10">
+                        <label class="form-label fw-bold fs-6 mb-2 required">Assign Skills (Categories)</label>
+                        <div class="text-muted fs-7 mb-4">Select the maintenance categories this technician is responsible for.</div>
+
+                        <div class="row g-3">
+                            @if(isset($categories) && $categories->count() > 0)
+                                @foreach($categories as $category)
+                                    <div class="col-md-4 col-lg-3">
+                                        <div class="form-check form-check-custom form-check-solid">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   value="{{ $category->id }}"
+                                                   id="cat_{{ $category->id }}"
+                                                   name="categories[]"
+                                                   {{ (is_array(old('categories')) && in_array($category->id, old('categories'))) ? 'checked' : '' }}
+                                            />
+                                            <label class="form-check-label" for="cat_{{ $category->id }}">
+                                                {{ $category->name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="alert alert-warning">
+                                    No categories found in database. Please ask admin to add categories first.
+                                </div>
+                            @endif
+                        </div>
+                        @error('categories')
+                            <div class="text-danger mt-2">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Form Actions -->

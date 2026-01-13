@@ -353,10 +353,10 @@
             </button>
         </form>
 
-        <div class="auth-footer">
+        {{-- <div class="auth-footer">
             Don't have an account?
             <a href="{{ route('register') }}" class="auth-link">Register now</a>
-        </div>
+        </div> --}}
 
         @push('scripts')
 <script>

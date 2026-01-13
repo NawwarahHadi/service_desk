@@ -65,13 +65,16 @@ class UserProfileController extends Controller
     {
         $user = $request->user();
 
+        // 1. Load the categories relationship
+        $user->load('categories');
+
         if (!$user->hasRole('technician')) {
             abort(403, 'Unauthorized.');
         }
 
         return view('user_management.technician.tech_profile_view', compact('user'));
     }
-    
+
     /**
      * Update Technician Profile
      */
