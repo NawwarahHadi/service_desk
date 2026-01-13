@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\feedback;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class FeedbackController extends Controller
@@ -14,38 +18,11 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-       $feedback = [
-            (object)[
-                    'ticket_id' => 'TK000001',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Fan Not Working',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 4,
-                    'comment' => 'Technician repaired the fan quickly and efficiently.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000002',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Light Flickering',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 5,
-                    'comment' => 'Fast response, light issue fixed perfectly.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000030',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Broken Chair in Room',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    //nanti nawa tukar sini for student feedback and rate
-                    'rating' => 5,
-                    'comment' => 'Fast Services'
-            ],
-        ];
+        $studentId = Auth::id(); // get the logged-in student
 
-
+        $feedback = Feedback::where('user_id', $studentId)
+                            ->with(['ticket.technician', 'student'])
+                            ->get();
         $data = [
             'feedback' => $feedback,
         ];
@@ -56,173 +33,7 @@ class FeedbackController extends Controller
 
     public function index_admin()
     {
-        $feedback = [
-                (object)[
-                    'ticket_id' => 'TK000001',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Fan Not Working',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 4,
-                    'comment' => 'Technician repaired the fan quickly and efficiently.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000002',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Light Flickering',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 5,
-                    'comment' => 'Fast response, light issue fixed perfectly.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000004',
-                    'userid' => 'STUD000003',
-                    'student_name' => 'Asilah Zarifah',
-                    'title' => 'Dirty Pantry Area',
-                    'technician_name' => 'Siti Nur Izzah binti Abdul Rahman',
-                    'rating' => 5,
-                    'comment' => 'Very clean work and friendly attitude.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000009',
-                    'userid' => 'STUD000006',
-                    'student_name' => 'Aishah Binti Azmi',
-                    'title' => 'Dusty Corridor',
-                    'student_name' => 'Aishah Binti Azmi',
-                    'technician_name' => 'Siti Nur Izzah binti Abdul Rahman',
-                    'rating' => 3,
-                    'comment' => 'Corridor not really cleaned'
-                ],
-                (object)[
-            'ticket_id' => 'TK000010',
-            'userid' => 'STUD000002',
-            'student_name' => 'Aminah Farhana',
-            'title' => 'Air Conditioner Leaking',
-            'technician_name' => 'Syafiq Hakim Bin Razali',
-            'rating' => 4,
-            'comment' => 'Leak fixed properly and fast.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000012',
-            'userid' => 'STUD000004',
-            'student_name' => 'Nurin Balqis',
-            'title' => 'Intermittent Wi-Fi Drop',
-            'technician_name' => 'Izwan Firdaus Bin Omar',
-            'rating' => 3,
-            'comment' => 'Improved but still occasionally drops.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000013',
-            'userid' => 'STUD000008',
-            'student_name' => 'Hani Sofea',
-            'title' => 'Unclean Washroom',
-            'technician_name' => 'Nurin Farah Izzati binti Rusdi',
-            'rating' => 5,
-            'comment' => 'Very clean and hygienic afterward.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000015',
-            'userid' => 'STUD000001',
-            'student_name' => 'Aminah Farhana',
-            'title' => 'Broken Door Lock',
-            'technician_name' => 'Syafiq Hakim Bin Razali',
-            'rating' => 4,
-            'comment' => 'Door fixed and now secure.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000017',
-            'userid' => 'STUD000007',
-            'student_name' => 'Pei Wei',
-            'title' => 'No Water Supply',
-            'technician_name' => 'Nurin Farah Izzati binti Rusdi',
-            'rating' => 5,
-            'comment' => 'Resolved instantly, great work!'
-        ],
-        (object)[
-            'ticket_id' => 'TK000018',
-            'userid' => 'STUD000003',
-            'student_name' => 'Asilah Zarifah',
-            'title' => 'Dirty Laundry Area',
-            'technician_name' => 'Nurin Farah Izzati binti Rusdi',
-            'rating' => 5,
-            'comment' => 'Area looks very clean now.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000020',
-            'userid' => 'STUD000002',
-            'student_name' => 'Aminah Farhana',
-            'title' => 'Broken Chair',
-            'technician_name' => 'Ahmad Bin Norman',
-            'rating' => 3,
-            'comment' => 'Chair fixed but still slightly shaky.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000021',
-            'userid' => 'STUD000004',
-            'student_name' => 'Nurin Balqis',
-            'title' => 'Light Buzzing Noise',
-            'technician_name' => 'Ahmad Bin Norman',
-            'rating' => 4,
-            'comment' => 'Buzzing noise gone.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000023',
-            'userid' => 'STUD000008',
-            'student_name' => 'Hani Sofea',
-            'title' => 'Wet Corridor',
-            'technician_name' => 'Nurin Farah Izzati binti Rusdi',
-            'rating' => 5,
-            'comment' => 'Corridor dried and cleaned well.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000025',
-            'userid' => 'STUD000006',
-            'student_name' => 'Aishah Binti Azmi',
-            'title' => 'Dusty Cupboard',
-            'technician_name' => 'Nurin Farah Izzati binti Rusdi',
-            'rating' => 3,
-            'comment' => 'Still a bit dusty but acceptable.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000026',
-            'userid' => 'STUD000003',
-            'student_name' => 'Asilah Zarifah',
-            'title' => 'Loose Water Tap',
-            'technician_name' => 'Siti Nur Izzah binti Abdul Rahman',
-            'rating' => 4,
-            'comment' => 'Tap now stable.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000028',
-            'userid' => 'STUD000007',
-            'student_name' => 'Pei Wei',
-            'title' => 'Light Switch Hot',
-            'technician_name' => 'Izwan Firdaus Bin Omar',
-            'rating' => 5,
-            'comment' => 'Switch replaced safely.'
-        ],
-        (object)[
-            'ticket_id' => 'TK000029',
-            'userid' => 'STUD000010',
-            'student_name' => 'Nur Izzati',
-            'title' => 'Dirty Pantry Sink',
-            'technician_name' => 'Nurin Farah Izzati binti Rusdi',
-            'rating' => 4,
-            'comment' => 'Cleaned thoroughly.'
-        ],
-        (object)[
-                    'ticket_id' => 'TK000030',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Broken Chair in Room',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 5,
-                    'comment' => 'Fast Services'
-                    //nanti nawa tukar sini for student feedback and rate
-            ],
-        ];
-
+        $feedback = Feedback::with(['student', 'ticket.technician'])->get();
 
         $data = [
             'feedback' => $feedback,
@@ -230,56 +41,15 @@ class FeedbackController extends Controller
 
         return  view ('feedback.index-admin',$data);
     }
+
     public function index_technian()
     {
-        $feedback = [
-            (object)[
-                    'ticket_id' => 'TK000001',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Fan Not Working',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 4,
-                    'comment' => 'Technician repaired the fan quickly and efficiently.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000002',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Light Flickering',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 5,
-                    'comment' => 'Fast response, light issue fixed perfectly.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000020',
-                    'userid' => 'STUD000002',
-                    'student_name' => 'Aminah Farhana',
-                    'title' => 'Broken Chair',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 3,
-                    'comment' => 'Chair fixed but still slightly shaky.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000021',
-                    'userid' => 'STUD000004',
-                    'student_name' => 'Aminah Farhana',
-                    'title' => 'Light Buzzing Noise',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    'rating' => 5,
-                    'comment' => 'Fast response, light issue fixed perfectly.'
-                ],
-                (object)[
-                    'ticket_id' => 'TK000030',
-                    'userid' => 'STUD000001',
-                    'student_name' => 'Siti Nawwarah',
-                    'title' => 'Broken Chair in Room',
-                    'technician_name' => 'Ahmad Bin Norman',
-                    //nanti nawa tukar sini for student feedback and rate
-                    'rating' => 5,
-                    'comment' => 'Fast Services'
-                ],
-        ];
+        $technicianId = Auth::id();
+
+        $feedback = Feedback::whereHas('ticket', function ($query) use ($technicianId) {
+            $query->where('assigned_technician_id', $technicianId);
+        })->with(['ticket', 'student'])->get();
+
 
 
         $data = [
@@ -293,25 +63,22 @@ class FeedbackController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    // public function create($ticketNumber)
+    // {
+    //     $ticket = Ticket::where('ticket_number', $ticketNumber)
+    //                     ->with('technician')
+    //                     ->firstOrFail();
+
+    //     return view('feedback.create', compact('ticket'));
+    // }
+    public function create($ticketId)
     {
-        $ticket = (object) [
-            'id' => 001,
-            'title' => 'Fan Not Working',
-            'technician' => (object)[
-                'id' => 88,
-                'name' => 'Dummy Technician'
-            ]
-        ];
+        $ticket = Ticket::with('technician')->findOrFail($ticketId);
 
-
-        $data = [
-            'ticket' => $ticket,
-        ];
-
-        return  view ('feedback.create',$data);
-
+        return view('feedback.create', compact('ticket'));
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -319,7 +86,8 @@ class FeedbackController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'rating' => 'required',
+            'ticket_id' => 'required',
+            'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required'
         ]);
 
@@ -328,10 +96,15 @@ class FeedbackController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        Feedback::create([
+            'ticket_id' => $request->ticket_id,
+            'user_id'  => Auth::id(),
+            'rating' => $request->rating,
+            'comment' => $request->comment
+        ]);
+
         Alert::success('Thank you!', 'Your feedback has been submitted successfully.');
         return redirect()->route('feedback.index');
-
-
     }
 
     /**

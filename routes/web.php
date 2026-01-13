@@ -128,22 +128,32 @@ Route::get('/dashboard', [DashboardController::class, 'technian']) //for  techni
 Route::middleware('auth')->group(function () {
 
     //Complaint Ticket Module
+    Route::middleware('auth')->group(function () {
+
     Route::prefix('complaint')->name('complaint.')->group(function () {
-        Route::get('/createticket', function () {
-            return view('complaintmodule.createticket');
-        });
-        Route::get('/ticketlistdata', [TicketController::class, 'index'])->name('ticket.list');
-        Route::get('/ticket/{id}', [TicketController::class, 'show'])->name('ticket.details');
 
+        Route::get('/createticket', [TicketController::class, 'create'])
+            ->name('ticket.create');
 
+        Route::post('/save', [TicketController::class, 'store'])
+            ->name('ticket.store');
+
+        Route::get('/ticketlistdata', [TicketController::class, 'index'])
+            ->name('ticket.list');
+
+        Route::get('/ticket/{ticket_number}', [TicketController::class, 'show'])
+            ->name('ticket.details');
     });
+});
+
+
 
     //Feedback
     Route::prefix('feedback')->name('feedback.')->group(function () {
         Route::get('/index', [FeedbackController::class, 'index'])->name('index');
         Route::get('/Admin', [FeedbackController::class, 'index_admin'])->name('index_admin');
         Route::get('/technian', [FeedbackController::class, 'index_technian'])->name('index_technian');
-        Route::get('/create', [FeedbackController::class, 'create'])->name('create');
+        Route::get('/create/{ticket}', [FeedbackController::class, 'create'])->name('create');
         Route::post('/save', [FeedbackController::class, 'store'])->name('save');
     });
 
@@ -223,5 +233,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/assign-technician', [AdminTicketController::class, 'assignTechnician'])
         ->name('assign.technician');
 });
+
 
 require __DIR__.'/auth.php';

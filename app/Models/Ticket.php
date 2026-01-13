@@ -4,9 +4,11 @@ namespace App\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Ticket extends Model
 {
     protected $table = 'tickets';
+    public $timestamps = true;
 
     protected $fillable = [
         'ticket_number',
@@ -23,7 +25,7 @@ class Ticket extends Model
     ];
 
     protected $casts = [
-        'raised_date' => 'datetime',
+        'raised_date' => 'date',
         'resolved_date' => 'datetime',
     ];
 
@@ -43,5 +45,15 @@ class Ticket extends Model
     public function technician()
     {
         return $this->belongsTo(User::class, 'assigned_technician_id');
+
+    }
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'ticket_id');
     }
 }

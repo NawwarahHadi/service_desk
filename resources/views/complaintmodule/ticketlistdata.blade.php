@@ -52,7 +52,7 @@
             <table class="m-datatable table align-middle table-row-dashed fs-6 gy-5">
                 <thead>
                     <tr class="text-start text-dark fw-bold fs-7 text-uppercase gs-0">
-                        <th>Ticket ID</th>
+                        <th>Ticket Number</th>
                         <th>Title</th>
                         <th>Category</th>
                         <th>Malfunction Date</th>
@@ -62,24 +62,24 @@
                 </thead>
                 <tbody class="text-black-600 fw-semibold">
                     @foreach ($tickets as $ticket)
-                        <tr onclick="window.location='{{ route('complaint.ticket.details', $ticket->id) }}';" style="cursor:pointer;">
-                            <td>{{ $ticket->id }}</td>
+                        <tr onclick="window.location='{{ route('complaint.ticket.details', $ticket->ticket_number) }}';" style="cursor:pointer;">
+                            <td>{{ $ticket->ticket_number }}</td>
 
                             <!-- Title + Location in the same cell -->
                             <td>
                                 <div class="fw-bold">{{ $ticket->title }}</div>
                                 <div class="text-muted" style="font-size: 12px;">Location: {{ $ticket->location }}</div>
                             </td>
-                            <td>{{ $ticket->category }}</td>
-                            <td>{{ $ticket->date }}</td>
+                            <td>{{ $ticket->category->name }}</td>
+                            <td>{{ \Carbon\Carbon::parse($ticket->raised_date)->format('d/m/Y') }}</td>
 
                             <!-- Status aligned left -->
                             <td class="text-start">
-                                @if ($ticket->status == 'Completed')
+                                @if ($ticket->status == 'completed')
                                     <span class="badge badge-light-success fs-6">Completed</span>
-                                @elseif ($ticket->status == 'Pending')
+                                @elseif ($ticket->status == 'pending')
                                     <span class="badge badge-light-warning fs-6">Pending</span>
-                                @elseif ($ticket->status == 'Cancel')
+                                @elseif ($ticket->status == 'cancel')
                                     <span class="badge badge-light-danger fs-6">Cancel</span>
                                 @else
                                     <span class="badge badge-light-secondary fs-6">Unknown</span>
@@ -87,12 +87,11 @@
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                @if ($ticket->status == 'Completed')
-                                    @if (!empty($ticket->rating) && $ticket->rating > 0)
-                                        {{-- ⭐ Show stars when rating exists --}}
+                                @if ($ticket->status == 'completed')
+                                    @if ($ticket->feedback && $ticket->feedback->rating > 0)
                                         <div class="rating d-flex justify-content-left" style="gap:4px;">
                                             @for ($i = 1; $i <= 5; $i++)
-                                                <div class="rating-label {{ $i <= $ticket->rating ? 'checked' : '' }}">
+                                                <div class="rating-label {{ $i <= $ticket->feedback->rating ? 'checked' : '' }}">
                                                     <i class="ki-duotone ki-star fs-2">
                                                         <span class="path1"></span>
                                                         <span class="path2"></span>
@@ -102,15 +101,10 @@
                                         </div>
                                     @else
                                         {{-- ❗ No rating yet → show Rate button --}}
-                                        <a href="{{ route('feedback.create', $ticket->id) }}"
-                                        class="btn btn-sm btn-info fs-6"
-                                        onclick="event.stopPropagation();">
-                                            {{-- <i class="ki-duotone ki-star fs-4">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i> --}}
+                                        <a href="{{ route('feedback.create', $ticket->id) }}" class="btn btn-sm btn-info fs-6" onclick="event.stopPropagation();">
                                             Rate
                                         </a>
+
                                     @endif
                                 @else
                                     <span class="text-muted">-</span>
