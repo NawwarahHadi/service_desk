@@ -42,6 +42,19 @@
                     </div>
 
                     <div class="col-md-6">
+                        <label for="student_id" class="form-label required">USM ID</label>
+                        <input type="text"
+                               id="student_id"
+                               name="student_id"
+                               class="form-control @error('student_id') is-invalid @enderror"
+                               value="{{ old('student_id', $user->student_id) }}"
+                               required>
+                        @error('student_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
                         <label for="name" class="form-label required">Full Name</label>
                         <input type="text"
                                id="name"
@@ -103,7 +116,7 @@
 
                     <div class="col-12 d-flex justify-content-end gap-2">
                         <a href="{{ route('dashboard') }}" class="btn btn-light">Cancel</a>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-info">
                             <i class="ki-duotone ki-check fs-2"></i>
                             Update Profile
                         </button>

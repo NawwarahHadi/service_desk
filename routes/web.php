@@ -47,19 +47,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 
 // Admin: show user edit page for a specific user
 Route::get('/admin/users/{user}/update', function (\App\Models\User $user) {
-    // THE FIX: Fetch all roles
-    $roles = DB::table('roles')->get();
-    // Pass BOTH 'user' AND 'roles' to the view
+    $roles = \Illuminate\Support\Facades\DB::table('roles')->get();
     return view('user_management.admin.admin_user_update', compact('user', 'roles'));
-})->name('admin.users.update');
+})->name('admin.users.edit');
 
-
-// Admin: destroy a specific user (to be implemented)
-Route::get('/admin/admin_users_destroy/{id}', function ($id) {
-    return "Destroy User $id (to be implemented)";
-})->name('admin.users.destroy');
-
-
+Route::patch('/admin/users/{id}/update', [AdminUserController::class, 'update'])
+    ->name('admin.users.update');
+    
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(function () {
 
     // User list
@@ -90,9 +84,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
         return view('user_management.admin.admin_user_update', compact('user', 'roles'));
     })->name('admin.users.edit');
 
-    // destroy
-    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])
-        ->name('admin.users.destroy');
+    // Destroy user (delete)
+    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 
@@ -179,8 +172,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/tickets/{id}/update', [TechnicianTicketController::class, 'update'])
             ->name('technician.ticket.update.submit');
     });
-
-
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

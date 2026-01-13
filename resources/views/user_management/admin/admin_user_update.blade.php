@@ -56,10 +56,32 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-5">
+                        <label for="student_id" class="form-label required">USM ID</label>
+                        <input type="text" class="form-control" id="student_id" name="student_id" placeholder="USM ID"
+                               value="{{ old('student_id', $user->student_id) }}" required>
+                        @error('student_id')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6 mb-5">
                         <label for="email" class="form-label required">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="example@test.com"
                                value="{{ old('email', $user->email) }}" required>
                         @error('email')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-5">
+                        <label for="is_active" class="form-label required">Status</label>
+                        <select class="form-select" id="is_active" name="is_active" required>
+                            <option value="1" {{ old('is_active', $user->is_active) == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ old('is_active', $user->is_active) == 0 ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                        @error('is_active')
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
@@ -76,19 +98,6 @@
                         </select>
                         <input type="hidden" name="role_id" value="{{ $user->role_id }}" />
                         @error('role_id')
-                            <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-5">
-                        <label for="is_active" class="form-label required">Status</label>
-                        <select class="form-select" id="is_active" name="is_active" required>
-                            <option value="1" {{ old('is_active', $user->is_active) == 1 ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ old('is_active', $user->is_active) == 0 ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                        @error('is_active')
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>

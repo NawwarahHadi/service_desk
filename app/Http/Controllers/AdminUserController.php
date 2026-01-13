@@ -16,7 +16,7 @@ class AdminUserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with('roles');
+        $query = User::with('role');
 
         // Search
         if ($request->filled('search')) {
@@ -112,7 +112,7 @@ class AdminUserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role'     => ['required', Rule::exists('roles', 'name')], // laratrust role name
+            'role_id'     => ['required', Rule::exists('roles', 'id')], // laratrust role id
             'status'   => ['required', Rule::in(['ACTIVE', 'INACTIVE'])],
             'phone_num'=> ['nullable', 'string', 'max:20'],
         ]);
@@ -124,11 +124,70 @@ class AdminUserController extends Controller
             'password'  => Hash::make($request->password),
             'is_active' => $request->status === 'ACTIVE',
             'phone_num' => $request->phone_num,
+            'student_id'=> $request->student_id,
+            'role_id'   => $request->role_id,
         ]);
 
-        // Assign role (Laratrust)
-        $user->attachRole($request->role);
+        // If you are using Laratrust (which uses a separate table),
+        // you can attach the ID directly.
+        // If you are NOT using Laratrust's pivot table, you can delete this line.
+        if (method_exists($user, 'attachRole')) {
+            $user->attachRole($request->role_id);
+        }
 
         return redirect()->route('userlist')->with('success', 'User created successfully.');
+    }
+
+    // delete user
+    public function destroy($id)
+    {
+        // Find the user or fail
+        $user = User::findOrFail($id);
+
+        // Delete the user
+        $user->delete();
+
+        // Return a JSON response for the AJAX call
+        return response()->json(['success' => 'User deleted successfully']);
+    }
+
+    // In app/Http/Controllers/AdminUserController.php
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // 1. VALIDATION
+        $request->validate([
+            'name'       => ['required', 'string', 'max:255'],
+            // specific unique check to ignore the current user's email/ID so it doesn't fail validation
+            'email'      => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'student_id' => ['required', Rule::unique('users', 'student_id')->ignore($user->id)],
+            'is_active'  => ['required', 'boolean'],
+            'password'   => ['nullable', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        // 2. UPDATE DATA
+        $dataToUpdate = [
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'is_active'  => $request->is_active,
+
+            // THIS LINE IS LIKELY MISSING IN YOUR CURRENT CODE:
+            'student_id' => $request->student_id,
+
+            // We usually don't update role_id on this simple edit,
+            // but if you want to support it, ensure you validate it first.
+        ];
+
+        // Only hash and update password if it was actually provided
+        if ($request->filled('password')) {
+            $dataToUpdate['password'] = Hash::make($request->password);
+        }
+
+        // 3. SAVE
+        $user->update($dataToUpdate);
+
+        return redirect()->route('userlist')->with('success', 'User updated successfully.');
     }
 }
