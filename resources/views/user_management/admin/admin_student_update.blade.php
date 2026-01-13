@@ -41,7 +41,7 @@
                         <input type="hidden" name="userid" value="{{ $user->userid }}" />
                         @error('userid')
                             <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror                       
+                        @enderror
                     </div>
 
                     <div class="col-md-6 mb-5">

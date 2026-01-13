@@ -28,23 +28,10 @@
         <div class="card-body">
             <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
                 @csrf
-                @method('PATCH') {{-- Or 'PUT' --}}
+                @method('PATCH')
 
                 <div class="row">
-                    <div class="col-md-6 mb-5">
-                        <label for="userid" class="form-label required">UserID</label>
-                        <input type="text"
-                            class="form-control"
-                            id="userid"
-                            value="{{ $user->userid }}"
-                            readonly />
-                        <input type="hidden" name="userid" value="{{ $user->userid }}" />
-                        @error('userid')
-                            <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 mb-5">
+                    <div class="col-md-12 mb-5">
                         <label for="name" class="form-label required">Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Full Name"
                                value="{{ old('name', $user->name) }}" required>
@@ -103,7 +90,53 @@
                     </div>
                 </div>
 
-                <div class="separator separator-dashed my-8"></div>
+                {{-- ... Previous Code ... --}}
+
+                {{-- NEW SECTION: SKILLS / CATEGORIES (Only visible for Technicians) --}}
+                @php
+                    $isTechnician = ($user->role_id == 3) || (optional($user->role)->name == 'technician');
+                @endphp
+
+                @if($isTechnician)
+                    <div class="separator separator-dashed my-8"></div>
+
+                    {{-- ✅ FIX: Added 'row' and 'col-12' to fix the left margin alignment --}}
+                    <div class="row">
+                        <div class="col-12 mb-10">
+                            <label class="form-label fw-bold fs-6 mb-2">Assign Skills (Categories)</label>
+                            <div class="text-muted fs-7 mb-4">
+                                Select the maintenance categories this technician is responsible for.
+                            </div>
+
+                            <div class="row g-3">
+                                @if(isset($categories) && $categories->count() > 0)
+                                    @foreach($categories as $category)
+                                        <div class="col-md-4 col-lg-3">
+                                            <div class="form-check form-check-custom form-check-solid">
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       value="{{ $category->id }}"
+                                                       id="cat_{{ $category->id }}"
+                                                       name="categories[]"
+                                                       {{ $user->categories->contains($category->id) ? 'checked' : '' }}
+                                                />
+                                                <label class="form-check-label" for="cat_{{ $category->id }}">
+                                                    {{ $category->name }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="alert alert-warning">
+                                        No categories found in database.
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- <div class="separator separator-dashed my-8"></div>
 
                 <h3 class="mb-5">Update Password (Optional)</h3>
                 <p class="text-muted">Leave the password fields blank to keep the user's current password.</p>
@@ -121,7 +154,7 @@
                         <label for="password_confirmation" class="form-label">Confirm New Password</label>
                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="text-end">
                     <button type="submit" class="btn btn-info">

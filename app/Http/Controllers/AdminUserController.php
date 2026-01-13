@@ -162,33 +162,36 @@ class AdminUserController extends Controller
         // 1. VALIDATION
         $request->validate([
             'name'       => ['required', 'string', 'max:255'],
-            // specific unique check to ignore the current user's email/ID so it doesn't fail validation
             'email'      => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'student_id' => ['required', Rule::unique('users', 'student_id')->ignore($user->id)],
             'is_active'  => ['required', 'boolean'],
             'password'   => ['nullable', 'string', 'min:8', 'confirmed'],
+
+            // 2. Add validation for categories
+            'categories'   => ['nullable', 'array'],
+            'categories.*' => ['exists:categories,id'],
         ]);
 
-        // 2. UPDATE DATA
+        // 3. Update User Details
         $dataToUpdate = [
             'name'       => $request->name,
             'email'      => $request->email,
             'is_active'  => $request->is_active,
-
-            // THIS LINE IS LIKELY MISSING IN YOUR CURRENT CODE:
             'student_id' => $request->student_id,
-
-            // We usually don't update role_id on this simple edit,
-            // but if you want to support it, ensure you validate it first.
         ];
 
-        // Only hash and update password if it was actually provided
         if ($request->filled('password')) {
             $dataToUpdate['password'] = Hash::make($request->password);
         }
 
-        // 3. SAVE
         $user->update($dataToUpdate);
+
+        // 4. SYNC CATEGORIES (The Critical Part)
+        // This automatically adds new checks and removes unchecked ones.
+        // We only do this if the user is a Technician.
+        if ($user->role_id == 3 || $user->hasRole('technician')) {
+            $user->categories()->sync($request->categories ?? []);
+        }
 
         return redirect()->route('userlist')->with('success', 'User updated successfully.');
     }
