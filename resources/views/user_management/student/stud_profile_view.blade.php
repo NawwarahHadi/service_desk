@@ -31,12 +31,12 @@
                     @csrf
                     @method('PATCH')
 
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <label class="form-label">User ID</label>
                         <input type="text" class="form-control" value="{{ $user->userid }}" readonly>
-                    </div>
+                    </div> --}}
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="form-label">Role</label>
                         <input type="text" class="form-control" value="{{ optional($user->role)->name ?? 'Student' }}" readonly>
                     </div>

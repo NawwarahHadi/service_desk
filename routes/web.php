@@ -38,11 +38,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         return view('user_management.admin.admin_stud_create', compact('hostels'));
     })->name('admin.stud.create');
 
-    // Technician creation page
-    Route::get('/admin_tech_create', function () {
-        // Could fetch additional technician-relevant data for the form if needed
-        return view('user_management.admin.admin_tech_create');
-    })->name('admin.tech.create');
+    // Technician creation page - NOW USES CONTROLLER
+    Route::get('/admin_tech_create', [AdminUserController::class, 'create'])
+        ->name('admin.tech.create');
 });
 
 // Admin: show user edit page for a specific user
@@ -53,7 +51,7 @@ Route::get('/admin/users/{user}/update', function (\App\Models\User $user) {
 
 Route::patch('/admin/users/{id}/update', [AdminUserController::class, 'update'])
     ->name('admin.users.update');
-    
+
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(function () {
 
     // User list
@@ -72,10 +70,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
         return view('user_management.admin.admin_stud_create', compact('hostels'));
     })->name('admin.student.create');
 
-    // Technician creation page
-    Route::get('/technician/create', function () {
-        return view('user_management.admin.admin_tech_create');
-    })->name('admin.technician.create');
+    // Technician creation page - NOW USES CONTROLLER
+    Route::get('/technician/create', [AdminUserController::class, 'create'])
+        ->name('admin.technician.create');
 
     // edit user
     Route::get('/users/{user}/edit', function (\App\Models\User $user) {

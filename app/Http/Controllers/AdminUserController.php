@@ -116,6 +116,8 @@ class AdminUserController extends Controller
             'role_id'    => ['required', Rule::exists('roles', 'id')],
             'status'     => ['required', Rule::in(['ACTIVE', 'INACTIVE'])],
             'phone_num'  => ['nullable', 'string', 'max:20'],
+            'categories'   => ['nullable', 'array'], // Must be an array
+            'categories.*' => ['exists:categories,id'], // Each item must exist in DB
         ]);
 
         // Create user first
@@ -128,6 +130,10 @@ class AdminUserController extends Controller
             'student_id'=> $request->student_id,
             'role_id'   => $request->role_id,
         ]);
+
+        if ($request->has('categories')) {
+            $user->categories()->sync($request->categories);
+        }
 
         $user->syncRoles([$request->role_id]);
 
@@ -185,5 +191,16 @@ class AdminUserController extends Controller
         $user->update($dataToUpdate);
 
         return redirect()->route('userlist')->with('success', 'User updated successfully.');
+    }
+
+    public function create(Request $request)
+    {
+        // ... existing code ...
+
+        // 1. ADD THIS LINE
+        $categories = \App\Models\Category::all();
+
+        // 2. PASS IT TO THE VIEW
+        return view('user_management.admin.admin_tech_create', compact('categories'));
     }
 }
