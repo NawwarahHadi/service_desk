@@ -13,6 +13,8 @@ class User extends Authenticatable implements LaratrustUserContract
 {
     use HasFactory, Notifiable, HasRolesAndPermissions;
 
+    protected $table = 'users';
+
     protected $fillable = [
         'userid',
         'name',
