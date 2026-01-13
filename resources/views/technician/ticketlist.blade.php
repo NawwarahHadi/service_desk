@@ -23,7 +23,7 @@
             <table class="m-datatable table align-middle table-row-dashed fs-6 gy-5">
                 <thead>
                     <tr class="text-start text-dark fw-bold fs-7 text-uppercase gs-0">
-                        <th>Ticket ID</th>
+                        <th>Ticket Number</th>
                         <th>Student ID</th>
                         <th>Title</th>
                         <th>Category</th>
