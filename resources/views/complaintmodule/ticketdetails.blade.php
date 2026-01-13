@@ -44,8 +44,19 @@
 
                 <div class="mb-4">
                     <h6 class="fw-semibold text-muted mb-1">Malfunction Date</h6>
-                    <p class="fs-6 mb-0">{{ \Carbon\Carbon::parse($ticket->raised_date)->format('d/m/Y') }}</p>
+                    <p class="fs-6 mb-0">{{ \Carbon\Carbon::parse($ticket->raised_date)->format('d/m/Y H:i') }}</p>
                 </div>
+
+            <div class="mb-4">
+                <h6 class="fw-semibold text-muted mb-1">Resolved Date</h6>
+                <p class="fs-6 mb-0">
+                    @if ($ticket->status === 'completed' && $ticket->resolved_date)
+                        {{ $ticket->resolved_date->format('d/m/Y H:i') }}
+                    @else
+                        -
+                    @endif
+                </p>
+            </div>
 
                 <div class="mb-4">
                     <h6 class="fw-semibold text-muted mb-1">Status</h6>

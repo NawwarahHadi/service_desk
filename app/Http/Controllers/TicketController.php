@@ -53,6 +53,7 @@ class TicketController extends Controller
         'description' => $request->description,
         'location' => $request->location,
         'raised_date' => $request->raised_date,
+        'resolved_date' => $request->resolved_date,
         'status' => 'pending',
     ]);
 
