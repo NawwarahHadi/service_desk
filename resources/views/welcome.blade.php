@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Service Desk') }} - Welcome</title>
-    
+
     <style>
         * {
             margin: 0;
@@ -252,13 +252,12 @@
     <!-- Main content -->
     <div class="container">
         <div class="logo-container">
-            <img src="{{ asset('metronic/assets/media/logoservicedesk.png') }}" 
-                 alt="Service Desk Logo" 
+            <img src="{{ asset('metronic/assets/media/logoservicedesk.png') }}"
+                 alt="Service Desk Logo"
                  class="logo"
         </div>
 
         <h1 class="title">Welcome to Service Desk</h1>
-        <p class="subtitle">Your IT Support Solution</p>
 
         <div class="loader-container">
             <div class="loader"></div>

@@ -8,10 +8,18 @@
 @section('css_after')
 @endsection
 
+<script>
+    window.ticketListUrl = "{{ route('complaint.ticket.list') }}";
+</script>
+
+<script src="{{ asset('js/complaintmodule/create.js') }}"></script>
+
+
 @section('js_after')
-    <script src="{{ asset ('metronic/js/create.js')}}"></script>
-    <script src="{{ asset('metronic/plugins/global/plugins.bundle.js') }}"></script>
-    <script src="{{ asset('metronic/js/scripts.bundle.js') }}"></script>
+    {{-- <script src="{{ asset('metronic/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('metronic/js/scripts.bundle.js') }}"></script> --}}
+    <script src="{{ asset ('metronic/js/button_loading.js')}}"></script>
+    <script src="{{ asset ('metronic/js/createticket.js')}}"></script>
 @endsection
 
 @section('content')
@@ -22,7 +30,7 @@
                 <div class="d-flex justify-content-center align-items-center min-vh-100">
                     <div class="card shadow-sm" style="max-width: 800px; width:100%">
                         <div class="card-body p-12">
-                            <form id="kt_modal_new_ticket_form" class="form" action="#">
+                            <form id="kt_modal_new_ticket_form" class="form" method="POST" action="{{ route('complaint.ticket.store') }}"> @csrf
                                 <!-- Heading -->
                                 <div class="mb-13 text-center">
                                     <h1 class="mb-3">Create Ticket</h1>
@@ -40,17 +48,16 @@
                                 <div class="row g-9 mb-8">
                                     <div class="col-12 fv-row">
                                         <label class="required fs-6 fw-semibold mb-2">Category</label>
-                                        <select class="form-select form-select-solid" name="product">
+                                        <select class="form-select form-select-solid" name="category_id">
                                             <option value="">Select a category</option>
-                                            <option value="1">Room Facilities</option>
-                                            <option value="2">Electrical & Lighting</option>
-                                            <option value="3">Internet Connection</option>
-                                            <option value="4">Cleanliness & Maintenance</option>
-                                            <option value="5">Toilet & Plumbing</option>
-                                            <option value="6">Others</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
+
+
 
                                 <!-- Description -->
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -69,10 +76,11 @@
                                 <!-- Date  Service Not Function-->
                                 <div class="row g-9 mb-8">
                                     <div class="col-12 fv-row">
-                                        <label class="required fs-6 fw-semibold mb-2">Malfunction Date</label>
-                                        <input class="form-control form-control-solid" placeholder="Select a date" name="due_date" type="date" />
+                                    <label class="required fs-6 fw-semibold mb-2">Malfunction Date</label>
+                                    <input class="form-control form-control-solid" placeholder="Select a date" name="raised_date" type="date" />
                                     </div>
                                 </div>
+
 
                                 <!--begin::Actions-->
                                 <div class="text-center">

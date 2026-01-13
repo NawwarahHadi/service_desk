@@ -2,175 +2,77 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ticket;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class TicketController extends Controller
 {
+    // ======================
+    // Ticket List
+    // ======================
     public function index()
     {
-        // 🟢 Fake data (for now, no database needed)
-        $tickets = [
-            (object)[
-                'id' => 'TK000001',
-                'userid' => 'STUD000001',
-                'title' => 'Fan Not Working',
-                'category' => 'Room Facilities',
-                'description' => 'Fan stops functioning',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '05/01/2025',
-                'status' => 'Completed',
-                'resolved_date' => '06/01/2025',
-                'rating' => 4,
-            ],
-            (object)[
-                'id' => 'TK000002',
-                'userid' => 'STUD000001',
-                'title' => 'Light Flickering',
-                'category' => 'Electrical & Lighting',
-                'description' => 'Main light flickers occasionally.',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '11/01/2025',
-                'status' => 'Completed',
-                'resolved_date' => '13/02/2025',
-                'rating' => 5,
-            ],
-             (object)[
-                'id' => 'TK000005',
-                'userid' => 'STUD000001',
-                'title' => 'Clogged Toilet',
-                'category' => 'Toilet & Plumbing',
-                'description' => 'Toilet bowl clogged.',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '21/01/2025',
-                'status' => 'Cancel',
-                'comment' => 'Ticket cancelled as the problem has been resolved.',
-                'resolved_date' => '',
-            ],
-            (object)[
-                'id' => 'TK000006',
-                'userid' => 'STUD000001',
-                'title' => 'Broken Study Table',
-                'category' => 'Room Facilities',
-                'description' => 'Table leg broken.',
-                'location' => 'M03 Saujana 05-45A',
-                'technician_name' => 'Syafiq Hakim Bin Razali',
-                'date' => '25/01/2025',
-                'status' => 'Completed',
-                'resolved_date' => '26/01/2025',
-            ],
-            (object)[
-                'id' => 'TK000007',
-                'userid' => 'STUD000001',
-                'title' => 'Power Socket Not Working',
-                'category' => 'Electrical & Lighting',
-                'description' => 'Socket suddenly stopped functioning.',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '30/01/2025',
-                'status' => 'Pending',
-                'resolved_date' => '',
-            ],
-            (object)[
-                'id' => 'TK000030',
-                'userid' => 'STUD000001',
-                'title' => 'Broken Chair in Room',
-                'category' => 'Room Facilities',
-                'description' => 'The chair in my room is unstable and could be dangerous to sit on.',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '14/02/2025',
-                'status' => 'Completed',
-                'resolved_date' => '17/02/2025',
-                'rating' => 5
+        $tickets = Ticket::with('category')
+            ->where('user_id', Auth::id())
+            ->orderBy('raised_date', 'desc')
+            ->get();
 
-                ]
-        ];
-
-        // Send this data to your Blade file
-        return view('complaintmodule.ticketlistdata', ['tickets' => $tickets]);
+        return view('complaintmodule.ticketlistdata', compact('tickets'));
     }
 
-//     public function edit($id)
-// {
-//     // Example: find ticket (for now just mock data)
-//     $ticket = (object)[
-//         'id' => $id,
-//         'title' => 'Example Ticket',
-//         'status' => 'pending',
-//     ];
-
-//     return view('complaintmodule.editticket', ['ticket' => $ticket]);
-// }
-
-    public function show($id)
+    // ======================
+    // Create Ticket Page
+    // ======================
+    public function create()
     {
-        $tickets = [
-            (object)[
-                'id' => 'TK000001',
-                'userid' => 'STUD000001',
-                'title' => 'Fan Not Working',
-                'category' => 'Room Facilities',
-                'description' => 'Fan stops functioning',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '05/01/2025',
-                'status' => 'Completed',
-                'resolved_date' => '06/01/2025',
-                'rating' => 4,
-            ],
-            (object)[
-                'id' => 'TK000002',
-                'userid' => 'STUD000001',
-                'title' => 'Light Flickering',
-                'category' => 'Electrical & Lighting',
-                'description' => 'Main light flickers occasionally.',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '11/01/2025',
-                'status' => 'Completed',
-                'resolved_date' => '13/02/2025',
-                'rating' => 5,
-            ],
-             (object)[
-                'id' => 'TK000005',
-                'userid' => 'STUD000001',
-                'title' => 'Clogged Toilet',
-                'category' => 'Toilet & Plumbing',
-                'description' => 'Toilet bowl clogged.',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '21/01/2025',
-                'status' => 'Cancel',
-                'comment' => 'Ticket cancelled as the problem has been resolved.',
-                'resolved_date' => '',
-            ],
-            (object)[
-                'id' => 'TK000007',
-                'userid' => 'STUD000001',
-                'title' => 'Power Socket Not Working',
-                'category' => 'Electrical & Lighting',
-                'description' => 'Socket suddenly stopped functioning.',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '30/01/2025',
-                'status' => 'Pending',
-                'resolved_date' => '',
-            ],
-            (object)[
-                'id' => 'TK000030',
-                'userid' => 'STUD000001',
-                'title' => 'Broken Chair in Room',
-                'category' => 'Room Facilities',
-                'description' => 'The chair in my room is unstable and could be dangerous to sit on.',
-                'location' => 'M04 Saujana 04-28B',
-                'date' => '14/02/2025',
-                'status' => 'Pending',
-                'resolved_date' => null,],
-        ];
-
-        // Find ticket by id
-        $ticket = collect($tickets)->firstWhere('id', $id);
-
-        // If ticket not found, show 404 page
-        if (!$ticket) {
-            abort(404, 'Ticket not found');
-        }
-
-        return view('complaintmodule.ticketdetails', ['ticket' => $ticket]);
+        $categories = Category::all();
+        return view('complaintmodule.createticket', compact('categories'));
     }
 
+    // ======================
+    // Store Ticket
+    // ======================
+    public function store(Request $request)
+{
+    // Get last ticket ID (or 0 if no record yet)
+    $lastTicket = Ticket::orderBy('id', 'desc')->first();
+    $nextNumber = $lastTicket ? $lastTicket->id + 1 : 1;
+
+    // Format: TCK-001, TCK-002, ...
+    $ticketNumber = 'TCK-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+    Ticket::create([
+        'ticket_number' => $ticketNumber,
+        'user_id' => Auth::id(),
+        'category_id' => $request->category_id,
+        'title' => $request->title,
+        'description' => $request->description,
+        'location' => $request->location,
+        'raised_date' => $request->raised_date,
+        'resolved_date' => $request->resolved_date,
+        'status' => 'pending',
+    ]);
+
+    return redirect()
+        ->route('complaint.ticket.list')
+        ->with('success', 'Ticket created successfully!');
+}
+
+
+    // ======================
+    // Ticket Details
+    // ======================
+    public function show($ticket_number)
+    {
+        $ticket = Ticket::with('category')
+            ->where('ticket_number', $ticket_number)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        return view('complaintmodule.ticketdetails', compact('ticket'));
+    }
 }

@@ -31,18 +31,18 @@
                     @csrf
                     @method('PATCH')
 
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <label class="form-label">User ID</label>
                         <input type="text" class="form-control" value="{{ $user->userid }}" readonly>
-                    </div>
+                    </div> --}}
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="form-label">Role</label>
                         <input type="text" class="form-control" value="{{ optional($user->role)->name ?? 'Student' }}" readonly>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="student_id" class="form-label required">Student ID</label>
+                        <label for="student_id" class="form-label required">USM ID</label>
                         <input type="text"
                                id="student_id"
                                name="student_id"
@@ -116,7 +116,7 @@
 
                     <div class="col-12 d-flex justify-content-end gap-2">
                         <a href="{{ route('dashboard') }}" class="btn btn-light">Cancel</a>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-info">
                             <i class="ki-duotone ki-check fs-2"></i>
                             Update Profile
                         </button>

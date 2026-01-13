@@ -19,77 +19,72 @@
             <h3 class="card-title">Ticket List (Technician)</h3>
         </div>
         <div class="card-body">
-            <style>
-                /* Active page number button (currently blue) → make it purple */
-                .page-item.active .page-link {
-                    background-color: #7239EA !important; /* Purple */
-                    border-color: #7239EA !important;
-                    color: #fff !important;
-                }
 
-                /* Normal page number buttons (optional, if you also want purple border on hover/normal) */
-                .page-link {
-                    color: #7239EA !important;
-                }
-
-                .page-link:hover {
-                    background-color: #ebe0ff !important; /* light purple hover */
-                    color: #7239EA !important;
-                }
-            </style>
             <table class="m-datatable table align-middle table-row-dashed fs-6 gy-5">
                 <thead>
                     <tr class="text-start text-dark fw-bold fs-7 text-uppercase gs-0">
-                        <th>Ticket ID</th>
+                        <th>Ticket Number</th>
                         <th>Student ID</th>
                         <th>Title</th>
                         <th>Category</th>
                         <th>Malfunction Date</th>
                         <th>Resolved Date</th>
-                        <th class="text-start">Status</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
+
                 <tbody class="text-black-600 fw-semibold">
                     @foreach ($tickets as $ticket)
                         <tr>
-                            <td>{{ $ticket->id }}</td>
-                            <td>{{ $ticket->userid }}</td>
+                            <td>{{ $ticket->ticket_number }}</td>
+
+                            <td>{{ $ticket->user->student_id ?? '-' }}</td>
+
                             <td>
-                                <a href="{{ route('technician.ticket.details', $ticket->id) }}" class="fw-bold text-decoration-none text-dark">
+                                <a href="{{ route('technician.ticket.details', $ticket->id) }}"
+                                   class="fw-bold text-decoration-none text-dark">
                                     {{ $ticket->title }}
                                 </a>
-                                <div class="text-muted" style="font-size: 12px;">Location: {{ $ticket->location }}</div>
+                                <div class="text-muted" style="font-size: 12px;">
+                                    Location: {{ $ticket->location }}
+                                </div>
                             </td>
-                            <td>{{ $ticket->category }}</td>
-                            <td>{{ $ticket->date }}</td>
+
+                            <td>{{ $ticket->category->name ?? '-' }}</td>
+
+                            <td>{{ $ticket->raised_date?->format('d/m/Y H:i') }}</td>
+
                             <td>
-                                @if($ticket->status == 'Completed' && isset($ticket->resolved_date))
-                                    {{ $ticket->resolved_date }}
+                                @if($ticket->status === 'completed' && $ticket->resolved_date)
+                                    {{ $ticket->resolved_date->format('d/m/Y H:i') }}
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td class="text-start">
-                                @if ($ticket->status == 'Completed')
+
+                            <td>
+                                @if ($ticket->status === 'completed')
                                     <span class="badge badge-light-success fs-6">Completed</span>
-                                @elseif ($ticket->status == 'Pending')
+                                @elseif ($ticket->status === 'pending')
                                     <span class="badge badge-light-warning fs-6">Pending</span>
-                                @elseif ($ticket->status == 'Cancel')
+                                @elseif ($ticket->status === 'cancel')
                                     <span class="badge badge-light-danger fs-6">Cancel</span>
                                 @else
                                     <span class="badge badge-light-secondary fs-6">Unknown</span>
                                 @endif
                             </td>
-                            <td class="text-start">
+
+                            <td>
                                 <a href="{{ route('technician.ticket.update', $ticket->id) }}"
                                    class="btn btn-sm btn-info fs-6">
-                                   Update
+                                    Update
                                 </a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
+
             </table>
         </div>
     </div>

@@ -24,12 +24,6 @@
             </div>
 
             <div class="card-body">
-                <!-- UserID Display (Auto-generated) -->
-                <div class="alert alert-info mb-5">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>Note:</strong> UserID will be automatically generated when the technician account is created.
-                </div>
-
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul class="mb-0">
@@ -75,40 +69,20 @@
 
                         <!-- Staff ID -->
                         <div class="col-md-6 mb-5">
-                            <label for="staff_id" class="form-label required">Staff ID</label>
+                            <label for="student_id" class="form-label required">USM ID</label>
                             <input type="text"
-                                class="form-control @error('staff_id') is-invalid @enderror"
-                                   id="staff_id"
-                                   name="staff_id"
-                                   value="{{ old('staff_id') }}"
+                                class="form-control @error('student_id') is-invalid @enderror"
+                                   id="student_id"
+                                   name="student_id"
+                                   value="{{ old('student_id') }}"
                                    required>
-                            @error('staff_id')
+                            @error('student_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <!-- Password -->
-                        <div class="col-md-6 mb-5">
-                            <label for="password" class="form-label required">Password</label>
-                            <input type="password"
-                                   class="form-control @error('password') is-invalid @enderror"
-                                   id="password"
-                                   name="password"
-                                   required>
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Password Confirmation -->
-                        <div class="col-md-6 mb-5">
-                            <label for="password_confirmation" class="form-label required">Confirm Password</label>
-                            <input type="password"
-                                   class="form-control"
-                                   id="password_confirmation"
-                                   name="password_confirmation"
-                                   required>
-                        </div>
+                        <input type="hidden" name="password" value="12345678">
+                        <input type="hidden" name="password_confirmation" value="12345678">
 
                         <?php
                             // Get the role from the old input (on validation failure) or the URL query parameter 'role'
@@ -121,23 +95,18 @@
                                 default => 'Role Not Set',
                             };
                         ?>
+
+                        <!-- Role (Hidden, defaults to STUDENT) -->
+                        <input type="hidden" name="role_id" value="3">
+
                         <!-- Role -->
                         <div class="col-md-6 mb-5">
                             <label for="role" class="form-label">Role</label>
-
                             <input type="text"
                                 class="form-control"
-                                value="{{ $roleDisplay }}"
+                                value="Technician"
                                 readonly
                                 disabled>
-
-                            <input type="hidden"
-                                name="role"
-                                value="{{ strtoupper($selectedRole) }}">
-
-                            @error('role')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <!-- Phone Number -->
@@ -153,41 +122,18 @@
                             @enderror
                         </div>
 
-                        <!-- Status -->
-                        <div class="col-md-6 mb-5">
-                            <label for="status" class="form-label">Status</label>
+                        <!-- Status (Hidden, defaults to ACTIVE) -->
+                        <input type="hidden" name="status" value="ACTIVE">
 
+                        <!-- Status Display (Read-only) -->
+                        <div class="col-md-6 mb-5">
+                            <label for="status_display" class="form-label">Status</label>
                             <input type="text"
                                 class="form-control"
                                 value="Active"
                                 readonly
                                 disabled>
-
-                            <input type="hidden"
-                                name="is_active"
-                                value="1">
-
-                            @error('is_active')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
-
-                        <!-- With active or inavtive option
-                        <div class="col-md-6 mb-5">
-                            <label for="status" class="form-label required">Status</label>
-                            <select class="form-select @error('is_active') is-invalid @enderror"
-                                    id="is_active"
-                                    name="is_active"
-                                    required>
-                                <option value="">Select Status</option>
-                                <option value="1" {{ old('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        -->
 
                         <!-- Hostel (only for STUDENT role) -->
                         <div class="col-md-6 mb-5" id="hostel_field" style="display: none;">
@@ -209,6 +155,41 @@
                             @enderror
                             <div class="form-text">Optional - Only applicable for students</div>
                         </div>
+                    </div>
+
+                    <div class="separator separator-dashed my-8"></div>
+
+                    <div class="mb-10">
+                        <label class="form-label fw-bold fs-6 mb-2 required">Assign Skills (Categories)</label>
+                        <div class="text-muted fs-7 mb-4">Select the maintenance categories this technician is responsible for.</div>
+
+                        <div class="row g-3">
+                            @if(isset($categories) && $categories->count() > 0)
+                                @foreach($categories as $category)
+                                    <div class="col-md-4 col-lg-3">
+                                        <div class="form-check form-check-custom form-check-solid">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   value="{{ $category->id }}"
+                                                   id="cat_{{ $category->id }}"
+                                                   name="categories[]"
+                                                   {{ (is_array(old('categories')) && in_array($category->id, old('categories'))) ? 'checked' : '' }}
+                                            />
+                                            <label class="form-check-label" for="cat_{{ $category->id }}">
+                                                {{ $category->name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="alert alert-warning">
+                                    No categories found in database. Please ask admin to add categories first.
+                                </div>
+                            @endif
+                        </div>
+                        @error('categories')
+                            <div class="text-danger mt-2">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Form Actions -->

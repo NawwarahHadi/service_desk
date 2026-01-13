@@ -179,7 +179,7 @@
 
                     <!-- Students Card -->
                     <div class="col-md-6 col-xl-6">
-                        <a href="{{ route('admin.userlist', ['role' => 'student']) }}" class="card bg-primary hoverable card-xl-stretch h-100">
+                        <a href="{{ route('admin.userlist', ['role' => 'Student']) }}" class="card bg-primary hoverable card-xl-stretch h-100">
                             <div class="card-body">
                                 <!-- YOUR CUSTOM LAYOUT: Stack on mobile (flex-column), Row on Desktop (flex-md-row) -->
                                 <div class="d-flex stat-row justify-content-between align-items-center mb-2 mt-5 flex-column flex-md-row">
@@ -233,7 +233,7 @@
                                 </h3>
                                 <!-- Toolbar could go here -->
                             </div>
-                            <a href="{{ route('feedback.index_admin') }}" class="card hoverable card-xl-stretch h-100">
+                            <a href="{{ route('complaint.ticket.list') }}" class="card hoverable card-xl-stretch h-100">
                                 <div class="card-body d-flex flex-center flex-column pt-0 px-0">
                                     <!-- Added wrapper for Chart.js sizing -->
                                     <div class="chart-outer-container" id="complaintChartWrapper">
@@ -253,7 +253,7 @@
                                     <span class="text-muted mt-1 fw-semibold fs-7">Student satisfaction levels</span>
                                 </h3>
                             </div>
-                            <a href="{{ route('feedback.index') }}" class="card hoverable card-xl-stretch h-100">
+                            <a href="{{ route('feedback.index_admin') }}" class="card hoverable card-xl-stretch h-100">
                                 <div class="card-body pt-0 px-5">
                                     <!-- Added wrapper for Chart.js sizing -->
                                     <div class="chart-outer-container">
