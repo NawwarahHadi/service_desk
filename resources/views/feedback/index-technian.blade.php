@@ -92,15 +92,15 @@
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->userid }}
+                                {{ $feedbacks->student->student_id }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->student_name }}
+                                {{ $feedbacks->student->name }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;">
-                                {{ $feedbacks->title }}
+                                {{ $feedbacks->ticket->title }}
                             </td>
 
                             <td style="vertical-align: middle; text-align:left;" data-rating="{{ $feedbacks->rating }}">

@@ -128,7 +128,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/createticket', [TicketController::class, 'create'])
             ->name('ticket.create');
 
-        Route::post('/createticket', [TicketController::class, 'store'])
+        Route::post('/save', [TicketController::class, 'store'])
             ->name('ticket.store');
 
         Route::get('/ticketlistdata', [TicketController::class, 'index'])
@@ -146,7 +146,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/index', [FeedbackController::class, 'index'])->name('index');
         Route::get('/Admin', [FeedbackController::class, 'index_admin'])->name('index_admin');
         Route::get('/technian', [FeedbackController::class, 'index_technian'])->name('index_technian');
-        Route::get('/create', [FeedbackController::class, 'create'])->name('create');
+        Route::get('/create/{ticket}', [FeedbackController::class, 'create'])->name('create');
         Route::post('/save', [FeedbackController::class, 'store'])->name('save');
     });
 

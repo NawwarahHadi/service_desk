@@ -21,6 +21,7 @@ class User extends Authenticatable implements LaratrustUserContract
         'is_active',
         'phone_num',
         'role_id',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -71,5 +72,10 @@ class User extends Authenticatable implements LaratrustUserContract
     {
         // This tells Laravel: "My role_id column belongs to the Role model"
         return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_technician_id');
     }
 }
