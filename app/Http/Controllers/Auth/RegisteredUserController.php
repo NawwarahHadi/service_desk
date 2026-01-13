@@ -43,6 +43,7 @@ class RegisteredUserController extends Controller
             'student_id' => $request->student_id,
             'password' => Hash::make($request->password),
             'is_active' => true,
+            'role_id' => 2,
         ]);
 
 

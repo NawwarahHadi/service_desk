@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -55,7 +56,6 @@ class User extends Authenticatable implements LaratrustUserContract
             }
         });
     }
-    // app/Models/User.php
 
     public function categories()
     {
@@ -67,9 +67,18 @@ class User extends Authenticatable implements LaratrustUserContract
         );
     }
 
+    // --- MERGED CONFLICT RESOLUTION BELOW ---
+
+    // Keep this for your User Management
     public function role()
     {
         // This tells Laravel: "My role_id column belongs to the Role model"
         return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    // Keep this for your Ticket System
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_technician_id');
     }
 }

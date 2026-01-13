@@ -88,11 +88,10 @@
 
                             <td style="vertical-align: middle; text-align:left;">
                                 @if ($ticket->status == 'completed')
-                                    @if (!empty($ticket->rating) && $ticket->rating > 0)
-                                        {{-- ⭐ Show stars when rating exists --}}
+                                    @if ($ticket->feedback && $ticket->feedback->rating > 0)
                                         <div class="rating d-flex justify-content-left" style="gap:4px;">
                                             @for ($i = 1; $i <= 5; $i++)
-                                                <div class="rating-label {{ $i <= $ticket->rating ? 'checked' : '' }}">
+                                                <div class="rating-label {{ $i <= $ticket->feedback->rating ? 'checked' : '' }}">
                                                     <i class="ki-duotone ki-star fs-2">
                                                         <span class="path1"></span>
                                                         <span class="path2"></span>
@@ -102,15 +101,10 @@
                                         </div>
                                     @else
                                         {{-- ❗ No rating yet → show Rate button --}}
-                                        <a href="{{ route('feedback.create', $ticket->ticket_number) }}"
-                                        class="btn btn-sm btn-info fs-6"
-                                        onclick="event.stopPropagation();">
-                                            {{-- <i class="ki-duotone ki-star fs-4">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i> --}}
+                                        <a href="{{ route('feedback.create', $ticket->id) }}" class="btn btn-sm btn-info fs-6" onclick="event.stopPropagation();">
                                             Rate
                                         </a>
+
                                     @endif
                                 @else
                                     <span class="text-muted">-</span>

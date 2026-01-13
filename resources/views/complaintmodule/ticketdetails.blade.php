@@ -59,15 +59,15 @@
                 </div>
 
                 <div class="mb-4">
-                    @if (!empty($ticket->comment))
+                    @if (!empty($ticket->technician_comment))
                         <h6 class="fw-semibold text-muted mb-1">Comment</h6>
-                        @if ($ticket->status == 'Completed')
+                        @if ($ticket->status == 'completed')
                             <p class="fs-6 mb-0 bg-success-subtle p-3 rounded w-100" style="min-height: 60px;">
-                                {{ $ticket->comment }}
+                                {{ $ticket->technician_comment }}
                             </p>
-                        @elseif ($ticket->status == 'Cancel')
+                        @elseif ($ticket->status == 'cancel')
                             <p class="fs-6 mb-0 bg-danger-subtle p-3 rounded w-100" style="min-height: 60px;">
-                                {{ $ticket->comment }}
+                                {{ $ticket->technician_comment }}
                             </p>
                         @endif
                     @endif

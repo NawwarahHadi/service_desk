@@ -133,7 +133,8 @@
                 </div>
             </div>
             <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-            <input type="hidden" name="technician_id" value="{{  $ticket->technician->id }}">
+            <input type="hidden" name="technician_id" value="{{ $ticket->assigned_id_technician }}">
+
             <div class="text-center">
                 <div class="card-footer d-flex justify-content-end py-6 px-9">
                     <button type="button" class="btn btn-light me-3" id="cancelBtn">
